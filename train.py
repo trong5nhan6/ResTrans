@@ -162,14 +162,15 @@ if __name__ == "__main__":
     # =========================
     class_weights_tensor = torch.tensor(class_weights, dtype=torch.float32).to(DEVICE)
 
-    criterion = nn.CrossEntropyLoss(weight=class_weights_tensor)
+    criterion = nn.CrossEntropyLoss()
+    # criterion = nn.CrossEntropyLoss(weight=class_weights_tensor)
     # criterion = FocalLoss(num_classes=num_classes, gamma=1.0, weight=class_weights_tensor)
     optimizer = torch.optim.AdamW(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
     scheduler = CosineAnnealingLR(optimizer, T_max=NUM_EPOCHS, eta_min=1e-6)
     # =========================
     # 9. Training loop
     # =========================
-    log_name = f"{MODEL_NAME}_mixup_{USE_MIXUP}_cutmix_{USE_CUTMIX}.log"
+    log_name = f"{MODEL_NAME}_mixup_{USE_MIXUP}_cutmix_{USE_CUTMIX}_cosine_classifier.log"
     logger = setup_logger(log_dir=LOG_DIR, log_name=log_name)
 
     log_dataset_info(logger, train_dataset, "Train")

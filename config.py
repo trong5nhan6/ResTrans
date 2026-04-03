@@ -11,11 +11,11 @@ WEIGHT_DECAY = 1e-4
 
 NUM_EPOCHS = 100
 
-USE_CUTMIX = False
-USE_MIXUP = False
+USE_CUTMIX = True
+USE_MIXUP = True
 ALPHA_MIXUP = 0.4
 ALPHA_CUTMIX = 1.0
 MINORITY_CLASS = [5, 6, 3]
 
-MODEL_NAME = "convnext" # "swinv2", "vit", "resnet152", "convnext" , resattn
+MODEL_NAME = "swinv2" # "swinv2", "vit", "resnet152", "convnext" , resattn
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"

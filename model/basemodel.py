@@ -1,7 +1,26 @@
 import torch
 import torch.nn as nn
 import torchvision.models as models
+import torch.nn.functional as F
 
+class CosineClassifier(nn.Module):
+    def __init__(self, in_dim, num_classes, scale=30.0):
+        super().__init__()
+        self.weight = nn.Parameter(torch.randn(num_classes, in_dim))
+        self.scale = scale
+
+    def forward(self, x):
+        # normalize feature
+        x = F.normalize(x, dim=1)
+
+        # normalize weight
+        w = F.normalize(self.weight, dim=1)
+
+        # cosine similarity
+        logits = torch.matmul(x, w.t())
+
+        # scale
+        return logits * self.scale
 
 class BaseModel(nn.Module):
     def __init__(self, model_name="resnet152", num_classes=3, pretrained=True):
@@ -41,9 +60,12 @@ class BaseModel(nn.Module):
             nn.Linear(in_dim, 512),
             nn.GELU(),
             nn.Dropout(0.2),
-            nn.Linear(512, num_classes)
         )
+
+        self.head = CosineClassifier(512, num_classes)
 
     def forward(self, x):
         feat = self.backbone(x)        
-        return self.classifier(feat)
+        feat = self.classifier(feat)
+        feat = self.head(feat)
+        return feat   
