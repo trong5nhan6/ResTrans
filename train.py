@@ -5,7 +5,7 @@ import os
 import numpy as np
 from torch.utils.data import DataLoader, WeightedRandomSampler
 from torch.optim.lr_scheduler import CosineAnnealingLR
-from config import DATA_ROOT, LOG_DIR, MODEL_DIR, BATCH_SIZE, NUM_WORKERS, LR, WEIGHT_DECAY, DEVICE, NUM_EPOCHS, MODEL_NAME
+from config import DATA_ROOT, LOG_DIR, MODEL_DIR, BATCH_SIZE, NUM_WORKERS, LR, WEIGHT_DECAY, DEVICE, NUM_EPOCHS, MODEL_NAME, USE_CUTMIX, USE_MIXUP, ALPHA_MIXUP, ALPHA_CUTMIX, MINORITY_CLASS
 from data.ISIC2018 import ISIC2018
 from model.basemodel import BaseModel
 from model.resattn import FullAttnResClassifier
@@ -16,9 +16,9 @@ import numpy as np
 # 8. Train / Eval
 # =========================
 def train_one_epoch(model, train_loader, val_loader,
-                    use_mixup=True, use_cutmix=True,
-                    alpha_mixup=0.4, alpha_cutmix=1.0,
-                    minority_class=[5, 6, 3]):
+                    use_mixup=USE_MIXUP, use_cutmix=USE_CUTMIX,
+                    alpha_mixup=ALPHA_MIXUP, alpha_cutmix=ALPHA_CUTMIX,
+                    minority_class=MINORITY_CLASS):
     model.train()
     train_loss = 0
     train_correct = 0
@@ -32,11 +32,11 @@ def train_one_epoch(model, train_loader, val_loader,
 
         # ===== Randomly apply Class-aware Mixup or CutMix =====
         r = np.random.rand()
-        if use_mixup and r < 0.5:
+        if USE_MIXUP and r < 0.5:
             imgs, targets_a, targets_b, lam = mixup_data_class_aware(
                 imgs, labels, alpha=alpha_mixup, minority_classes=minority_class
             )
-        elif use_cutmix:
+        elif USE_CUTMIX:
             imgs, targets_a, targets_b, lam = cutmix_data_class_aware(
                 imgs, labels, alpha=alpha_cutmix, minority_classes=minority_class
             )
@@ -169,7 +169,7 @@ if __name__ == "__main__":
     # =========================
     # 9. Training loop
     # =========================
-    log_name = f"{MODEL_NAME}_no_mixup_no_cutmix.log"
+    log_name = f"{MODEL_NAME}_mixup_{USE_MIXUP}_cutmix_{USE_CUTMIX}.log"
     logger = setup_logger(log_dir=LOG_DIR, log_name=log_name)
 
     log_dataset_info(logger, train_dataset, "Train")
@@ -180,20 +180,23 @@ if __name__ == "__main__":
     for epoch in range(EPOCHS):
         train_loss, train_acc, val_loss, val_acc = train_one_epoch(
             model, train_loader, val_loader,
-            use_mixup=False,   
-            use_cutmix=False,
-            alpha_mixup=0.4,
-            alpha_cutmix=1.0,
-            minority_class=[5, 6, 3]
+            use_mixup=USE_MIXUP,   
+            use_cutmix=USE_CUTMIX,
+            alpha_mixup=ALPHA_MIXUP,
+            alpha_cutmix=ALPHA_CUTMIX,
+            minority_class=MINORITY_CLASS
         )
 
         logger.info(f"Epoch [{epoch+1}/{EPOCHS}]")
         logger.info(f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.4f} | Val Loss: {val_loss:.4f} | Val Acc: {val_acc:.4f}")
         scheduler.step()
 
-        # print(f"\nEpoch {epoch+1}")
-        # print(f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.4f}")
-        # print(f"Val   Loss: {val_loss:.4f} | Val   Acc: {val_acc:.4f}")
+        # ===== Test every 20 epochs =====
+        if (epoch + 1) % 20 == 0:
+            test_metrics = evaluate(model, test_loader, num_classes)
+            logger.info(f"--- TEST METRICS @ Epoch {epoch+1} ---")
+            for k, v in test_metrics.items():
+                logger.info(f"{k}: {v:.4f}")
 
     flops, params = compute_model_complexity(model)
     logger.info("===== MODEL INFO =====")
@@ -201,7 +204,3 @@ if __name__ == "__main__":
     logger.info(f"GFLOPs: {flops:.2f}")
     logger.info(f"Params (M): {params:.2f}")
     test_metrics = evaluate(model, test_loader, num_classes)
-
-    print("\n=== TEST METRICS ===")
-    for k, v in test_metrics.items():
-        logger.info(f"{k}: {v:.4f}")
