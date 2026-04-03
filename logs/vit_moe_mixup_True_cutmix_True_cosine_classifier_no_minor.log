@@ -28,3 +28,251 @@
 2026-04-03 16:52:37 | INFO |   Class 4: 217 samples (14.35%)
 2026-04-03 16:52:37 | INFO |   Class 5: 44 samples (2.91%)
 2026-04-03 16:52:37 | INFO |   Class 6: 35 samples (2.31%)
+2026-04-03 17:01:39 | INFO | ===== TRAIN DATASET =====
+2026-04-03 17:01:39 | INFO | Total samples: 10015
+2026-04-03 17:01:39 | INFO | Class distribution:
+2026-04-03 17:01:39 | INFO |   Class 0: 1113 samples (11.11%)
+2026-04-03 17:01:39 | INFO |   Class 1: 6705 samples (66.95%)
+2026-04-03 17:01:39 | INFO |   Class 2: 514 samples (5.13%)
+2026-04-03 17:01:39 | INFO |   Class 3: 327 samples (3.27%)
+2026-04-03 17:01:39 | INFO |   Class 4: 1099 samples (10.97%)
+2026-04-03 17:01:39 | INFO |   Class 5: 115 samples (1.15%)
+2026-04-03 17:01:39 | INFO |   Class 6: 142 samples (1.42%)
+2026-04-03 17:01:39 | INFO | ===== VALIDATION DATASET =====
+2026-04-03 17:01:39 | INFO | Total samples: 193
+2026-04-03 17:01:39 | INFO | Class distribution:
+2026-04-03 17:01:39 | INFO |   Class 0: 21 samples (10.88%)
+2026-04-03 17:01:39 | INFO |   Class 1: 123 samples (63.73%)
+2026-04-03 17:01:39 | INFO |   Class 2: 15 samples (7.77%)
+2026-04-03 17:01:39 | INFO |   Class 3: 8 samples (4.15%)
+2026-04-03 17:01:39 | INFO |   Class 4: 22 samples (11.40%)
+2026-04-03 17:01:39 | INFO |   Class 5: 1 samples (0.52%)
+2026-04-03 17:01:39 | INFO |   Class 6: 3 samples (1.55%)
+2026-04-03 17:01:39 | INFO | ===== TEST DATASET =====
+2026-04-03 17:01:39 | INFO | Total samples: 1512
+2026-04-03 17:01:39 | INFO | Class distribution:
+2026-04-03 17:01:39 | INFO |   Class 0: 171 samples (11.31%)
+2026-04-03 17:01:39 | INFO |   Class 1: 909 samples (60.12%)
+2026-04-03 17:01:39 | INFO |   Class 2: 93 samples (6.15%)
+2026-04-03 17:01:39 | INFO |   Class 3: 43 samples (2.84%)
+2026-04-03 17:01:39 | INFO |   Class 4: 217 samples (14.35%)
+2026-04-03 17:01:39 | INFO |   Class 5: 44 samples (2.91%)
+2026-04-03 17:01:39 | INFO |   Class 6: 35 samples (2.31%)
+2026-04-03 17:03:48 | INFO | ===== TRAIN DATASET =====
+2026-04-03 17:03:48 | INFO | Total samples: 10015
+2026-04-03 17:03:48 | INFO | Class distribution:
+2026-04-03 17:03:48 | INFO |   Class 0: 1113 samples (11.11%)
+2026-04-03 17:03:48 | INFO |   Class 1: 6705 samples (66.95%)
+2026-04-03 17:03:48 | INFO |   Class 2: 514 samples (5.13%)
+2026-04-03 17:03:48 | INFO |   Class 3: 327 samples (3.27%)
+2026-04-03 17:03:48 | INFO |   Class 4: 1099 samples (10.97%)
+2026-04-03 17:03:48 | INFO |   Class 5: 115 samples (1.15%)
+2026-04-03 17:03:48 | INFO |   Class 6: 142 samples (1.42%)
+2026-04-03 17:03:48 | INFO | ===== VALIDATION DATASET =====
+2026-04-03 17:03:48 | INFO | Total samples: 193
+2026-04-03 17:03:48 | INFO | Class distribution:
+2026-04-03 17:03:48 | INFO |   Class 0: 21 samples (10.88%)
+2026-04-03 17:03:48 | INFO |   Class 1: 123 samples (63.73%)
+2026-04-03 17:03:48 | INFO |   Class 2: 15 samples (7.77%)
+2026-04-03 17:03:48 | INFO |   Class 3: 8 samples (4.15%)
+2026-04-03 17:03:48 | INFO |   Class 4: 22 samples (11.40%)
+2026-04-03 17:03:48 | INFO |   Class 5: 1 samples (0.52%)
+2026-04-03 17:03:48 | INFO |   Class 6: 3 samples (1.55%)
+2026-04-03 17:03:48 | INFO | ===== TEST DATASET =====
+2026-04-03 17:03:48 | INFO | Total samples: 1512
+2026-04-03 17:03:48 | INFO | Class distribution:
+2026-04-03 17:03:48 | INFO |   Class 0: 171 samples (11.31%)
+2026-04-03 17:03:48 | INFO |   Class 1: 909 samples (60.12%)
+2026-04-03 17:03:48 | INFO |   Class 2: 93 samples (6.15%)
+2026-04-03 17:03:48 | INFO |   Class 3: 43 samples (2.84%)
+2026-04-03 17:03:48 | INFO |   Class 4: 217 samples (14.35%)
+2026-04-03 17:03:48 | INFO |   Class 5: 44 samples (2.91%)
+2026-04-03 17:03:48 | INFO |   Class 6: 35 samples (2.31%)
+2026-04-03 17:08:23 | INFO | ===== TRAIN DATASET =====
+2026-04-03 17:08:23 | INFO | Total samples: 10015
+2026-04-03 17:08:23 | INFO | Class distribution:
+2026-04-03 17:08:23 | INFO |   Class 0: 1113 samples (11.11%)
+2026-04-03 17:08:23 | INFO |   Class 1: 6705 samples (66.95%)
+2026-04-03 17:08:23 | INFO |   Class 2: 514 samples (5.13%)
+2026-04-03 17:08:23 | INFO |   Class 3: 327 samples (3.27%)
+2026-04-03 17:08:23 | INFO |   Class 4: 1099 samples (10.97%)
+2026-04-03 17:08:23 | INFO |   Class 5: 115 samples (1.15%)
+2026-04-03 17:08:23 | INFO |   Class 6: 142 samples (1.42%)
+2026-04-03 17:08:23 | INFO | ===== VALIDATION DATASET =====
+2026-04-03 17:08:23 | INFO | Total samples: 193
+2026-04-03 17:08:23 | INFO | Class distribution:
+2026-04-03 17:08:23 | INFO |   Class 0: 21 samples (10.88%)
+2026-04-03 17:08:23 | INFO |   Class 1: 123 samples (63.73%)
+2026-04-03 17:08:23 | INFO |   Class 2: 15 samples (7.77%)
+2026-04-03 17:08:23 | INFO |   Class 3: 8 samples (4.15%)
+2026-04-03 17:08:23 | INFO |   Class 4: 22 samples (11.40%)
+2026-04-03 17:08:23 | INFO |   Class 5: 1 samples (0.52%)
+2026-04-03 17:08:23 | INFO |   Class 6: 3 samples (1.55%)
+2026-04-03 17:08:23 | INFO | ===== TEST DATASET =====
+2026-04-03 17:08:23 | INFO | Total samples: 1512
+2026-04-03 17:08:23 | INFO | Class distribution:
+2026-04-03 17:08:23 | INFO |   Class 0: 171 samples (11.31%)
+2026-04-03 17:08:23 | INFO |   Class 1: 909 samples (60.12%)
+2026-04-03 17:08:23 | INFO |   Class 2: 93 samples (6.15%)
+2026-04-03 17:08:23 | INFO |   Class 3: 43 samples (2.84%)
+2026-04-03 17:08:23 | INFO |   Class 4: 217 samples (14.35%)
+2026-04-03 17:08:23 | INFO |   Class 5: 44 samples (2.91%)
+2026-04-03 17:08:23 | INFO |   Class 6: 35 samples (2.31%)
+2026-04-03 17:14:02 | INFO | ===== TRAIN DATASET =====
+2026-04-03 17:14:02 | INFO | Total samples: 10015
+2026-04-03 17:14:02 | INFO | Class distribution:
+2026-04-03 17:14:02 | INFO |   Class 0: 1113 samples (11.11%)
+2026-04-03 17:14:02 | INFO |   Class 1: 6705 samples (66.95%)
+2026-04-03 17:14:02 | INFO |   Class 2: 514 samples (5.13%)
+2026-04-03 17:14:02 | INFO |   Class 3: 327 samples (3.27%)
+2026-04-03 17:14:02 | INFO |   Class 4: 1099 samples (10.97%)
+2026-04-03 17:14:02 | INFO |   Class 5: 115 samples (1.15%)
+2026-04-03 17:14:02 | INFO |   Class 6: 142 samples (1.42%)
+2026-04-03 17:14:02 | INFO | ===== VALIDATION DATASET =====
+2026-04-03 17:14:02 | INFO | Total samples: 193
+2026-04-03 17:14:02 | INFO | Class distribution:
+2026-04-03 17:14:02 | INFO |   Class 0: 21 samples (10.88%)
+2026-04-03 17:14:02 | INFO |   Class 1: 123 samples (63.73%)
+2026-04-03 17:14:02 | INFO |   Class 2: 15 samples (7.77%)
+2026-04-03 17:14:02 | INFO |   Class 3: 8 samples (4.15%)
+2026-04-03 17:14:02 | INFO |   Class 4: 22 samples (11.40%)
+2026-04-03 17:14:02 | INFO |   Class 5: 1 samples (0.52%)
+2026-04-03 17:14:02 | INFO |   Class 6: 3 samples (1.55%)
+2026-04-03 17:14:02 | INFO | ===== TEST DATASET =====
+2026-04-03 17:14:02 | INFO | Total samples: 1512
+2026-04-03 17:14:02 | INFO | Class distribution:
+2026-04-03 17:14:02 | INFO |   Class 0: 171 samples (11.31%)
+2026-04-03 17:14:02 | INFO |   Class 1: 909 samples (60.12%)
+2026-04-03 17:14:02 | INFO |   Class 2: 93 samples (6.15%)
+2026-04-03 17:14:02 | INFO |   Class 3: 43 samples (2.84%)
+2026-04-03 17:14:02 | INFO |   Class 4: 217 samples (14.35%)
+2026-04-03 17:14:02 | INFO |   Class 5: 44 samples (2.91%)
+2026-04-03 17:14:02 | INFO |   Class 6: 35 samples (2.31%)
+2026-04-03 17:15:32 | INFO | ===== TRAIN DATASET =====
+2026-04-03 17:15:32 | INFO | Total samples: 10015
+2026-04-03 17:15:32 | INFO | Class distribution:
+2026-04-03 17:15:32 | INFO |   Class 0: 1113 samples (11.11%)
+2026-04-03 17:15:32 | INFO |   Class 1: 6705 samples (66.95%)
+2026-04-03 17:15:32 | INFO |   Class 2: 514 samples (5.13%)
+2026-04-03 17:15:32 | INFO |   Class 3: 327 samples (3.27%)
+2026-04-03 17:15:32 | INFO |   Class 4: 1099 samples (10.97%)
+2026-04-03 17:15:32 | INFO |   Class 5: 115 samples (1.15%)
+2026-04-03 17:15:32 | INFO |   Class 6: 142 samples (1.42%)
+2026-04-03 17:15:32 | INFO | ===== VALIDATION DATASET =====
+2026-04-03 17:15:32 | INFO | Total samples: 193
+2026-04-03 17:15:32 | INFO | Class distribution:
+2026-04-03 17:15:32 | INFO |   Class 0: 21 samples (10.88%)
+2026-04-03 17:15:32 | INFO |   Class 1: 123 samples (63.73%)
+2026-04-03 17:15:32 | INFO |   Class 2: 15 samples (7.77%)
+2026-04-03 17:15:32 | INFO |   Class 3: 8 samples (4.15%)
+2026-04-03 17:15:32 | INFO |   Class 4: 22 samples (11.40%)
+2026-04-03 17:15:32 | INFO |   Class 5: 1 samples (0.52%)
+2026-04-03 17:15:32 | INFO |   Class 6: 3 samples (1.55%)
+2026-04-03 17:15:32 | INFO | ===== TEST DATASET =====
+2026-04-03 17:15:32 | INFO | Total samples: 1512
+2026-04-03 17:15:32 | INFO | Class distribution:
+2026-04-03 17:15:32 | INFO |   Class 0: 171 samples (11.31%)
+2026-04-03 17:15:32 | INFO |   Class 1: 909 samples (60.12%)
+2026-04-03 17:15:32 | INFO |   Class 2: 93 samples (6.15%)
+2026-04-03 17:15:32 | INFO |   Class 3: 43 samples (2.84%)
+2026-04-03 17:15:32 | INFO |   Class 4: 217 samples (14.35%)
+2026-04-03 17:15:32 | INFO |   Class 5: 44 samples (2.91%)
+2026-04-03 17:15:32 | INFO |   Class 6: 35 samples (2.31%)
+2026-04-03 17:16:41 | INFO | ===== TRAIN DATASET =====
+2026-04-03 17:16:41 | INFO | Total samples: 10015
+2026-04-03 17:16:41 | INFO | Class distribution:
+2026-04-03 17:16:41 | INFO |   Class 0: 1113 samples (11.11%)
+2026-04-03 17:16:41 | INFO |   Class 1: 6705 samples (66.95%)
+2026-04-03 17:16:41 | INFO |   Class 2: 514 samples (5.13%)
+2026-04-03 17:16:41 | INFO |   Class 3: 327 samples (3.27%)
+2026-04-03 17:16:41 | INFO |   Class 4: 1099 samples (10.97%)
+2026-04-03 17:16:41 | INFO |   Class 5: 115 samples (1.15%)
+2026-04-03 17:16:41 | INFO |   Class 6: 142 samples (1.42%)
+2026-04-03 17:16:41 | INFO | ===== VALIDATION DATASET =====
+2026-04-03 17:16:41 | INFO | Total samples: 193
+2026-04-03 17:16:41 | INFO | Class distribution:
+2026-04-03 17:16:41 | INFO |   Class 0: 21 samples (10.88%)
+2026-04-03 17:16:41 | INFO |   Class 1: 123 samples (63.73%)
+2026-04-03 17:16:41 | INFO |   Class 2: 15 samples (7.77%)
+2026-04-03 17:16:41 | INFO |   Class 3: 8 samples (4.15%)
+2026-04-03 17:16:41 | INFO |   Class 4: 22 samples (11.40%)
+2026-04-03 17:16:41 | INFO |   Class 5: 1 samples (0.52%)
+2026-04-03 17:16:41 | INFO |   Class 6: 3 samples (1.55%)
+2026-04-03 17:16:41 | INFO | ===== TEST DATASET =====
+2026-04-03 17:16:41 | INFO | Total samples: 1512
+2026-04-03 17:16:41 | INFO | Class distribution:
+2026-04-03 17:16:41 | INFO |   Class 0: 171 samples (11.31%)
+2026-04-03 17:16:41 | INFO |   Class 1: 909 samples (60.12%)
+2026-04-03 17:16:41 | INFO |   Class 2: 93 samples (6.15%)
+2026-04-03 17:16:41 | INFO |   Class 3: 43 samples (2.84%)
+2026-04-03 17:16:41 | INFO |   Class 4: 217 samples (14.35%)
+2026-04-03 17:16:41 | INFO |   Class 5: 44 samples (2.91%)
+2026-04-03 17:16:41 | INFO |   Class 6: 35 samples (2.31%)
+2026-04-03 17:17:14 | INFO | Epoch [1/100]
+2026-04-03 17:17:14 | INFO | Train Loss: 1.8115 | Train Acc: 0.5042 | Val Loss: 0.8158 | Val Acc: 0.7150
+2026-04-03 17:17:47 | INFO | Epoch [2/100]
+2026-04-03 17:17:47 | INFO | Train Loss: 1.4819 | Train Acc: 0.6238 | Val Loss: 0.7100 | Val Acc: 0.7254
+2026-04-03 17:18:25 | INFO | ===== TRAIN DATASET =====
+2026-04-03 17:18:25 | INFO | Total samples: 10015
+2026-04-03 17:18:25 | INFO | Class distribution:
+2026-04-03 17:18:25 | INFO |   Class 0: 1113 samples (11.11%)
+2026-04-03 17:18:25 | INFO |   Class 1: 6705 samples (66.95%)
+2026-04-03 17:18:25 | INFO |   Class 2: 514 samples (5.13%)
+2026-04-03 17:18:25 | INFO |   Class 3: 327 samples (3.27%)
+2026-04-03 17:18:25 | INFO |   Class 4: 1099 samples (10.97%)
+2026-04-03 17:18:25 | INFO |   Class 5: 115 samples (1.15%)
+2026-04-03 17:18:25 | INFO |   Class 6: 142 samples (1.42%)
+2026-04-03 17:18:25 | INFO | ===== VALIDATION DATASET =====
+2026-04-03 17:18:25 | INFO | Total samples: 193
+2026-04-03 17:18:25 | INFO | Class distribution:
+2026-04-03 17:18:25 | INFO |   Class 0: 21 samples (10.88%)
+2026-04-03 17:18:25 | INFO |   Class 1: 123 samples (63.73%)
+2026-04-03 17:18:25 | INFO |   Class 2: 15 samples (7.77%)
+2026-04-03 17:18:25 | INFO |   Class 3: 8 samples (4.15%)
+2026-04-03 17:18:25 | INFO |   Class 4: 22 samples (11.40%)
+2026-04-03 17:18:25 | INFO |   Class 5: 1 samples (0.52%)
+2026-04-03 17:18:25 | INFO |   Class 6: 3 samples (1.55%)
+2026-04-03 17:18:25 | INFO | ===== TEST DATASET =====
+2026-04-03 17:18:25 | INFO | Total samples: 1512
+2026-04-03 17:18:25 | INFO | Class distribution:
+2026-04-03 17:18:25 | INFO |   Class 0: 171 samples (11.31%)
+2026-04-03 17:18:25 | INFO |   Class 1: 909 samples (60.12%)
+2026-04-03 17:18:25 | INFO |   Class 2: 93 samples (6.15%)
+2026-04-03 17:18:25 | INFO |   Class 3: 43 samples (2.84%)
+2026-04-03 17:18:25 | INFO |   Class 4: 217 samples (14.35%)
+2026-04-03 17:18:25 | INFO |   Class 5: 44 samples (2.91%)
+2026-04-03 17:18:25 | INFO |   Class 6: 35 samples (2.31%)
+2026-04-03 17:18:59 | INFO | Epoch [1/100]
+2026-04-03 17:18:59 | INFO | Train Loss: 1.9098 | Train Acc: 0.4635 | Val Loss: 1.8770 | Val Acc: 0.6010
+2026-04-03 17:19:55 | INFO | ===== TRAIN DATASET =====
+2026-04-03 17:19:55 | INFO | Total samples: 10015
+2026-04-03 17:19:55 | INFO | Class distribution:
+2026-04-03 17:19:55 | INFO |   Class 0: 1113 samples (11.11%)
+2026-04-03 17:19:55 | INFO |   Class 1: 6705 samples (66.95%)
+2026-04-03 17:19:55 | INFO |   Class 2: 514 samples (5.13%)
+2026-04-03 17:19:55 | INFO |   Class 3: 327 samples (3.27%)
+2026-04-03 17:19:55 | INFO |   Class 4: 1099 samples (10.97%)
+2026-04-03 17:19:55 | INFO |   Class 5: 115 samples (1.15%)
+2026-04-03 17:19:55 | INFO |   Class 6: 142 samples (1.42%)
+2026-04-03 17:19:55 | INFO | ===== VALIDATION DATASET =====
+2026-04-03 17:19:55 | INFO | Total samples: 193
+2026-04-03 17:19:55 | INFO | Class distribution:
+2026-04-03 17:19:55 | INFO |   Class 0: 21 samples (10.88%)
+2026-04-03 17:19:55 | INFO |   Class 1: 123 samples (63.73%)
+2026-04-03 17:19:55 | INFO |   Class 2: 15 samples (7.77%)
+2026-04-03 17:19:55 | INFO |   Class 3: 8 samples (4.15%)
+2026-04-03 17:19:55 | INFO |   Class 4: 22 samples (11.40%)
+2026-04-03 17:19:55 | INFO |   Class 5: 1 samples (0.52%)
+2026-04-03 17:19:55 | INFO |   Class 6: 3 samples (1.55%)
+2026-04-03 17:19:55 | INFO | ===== TEST DATASET =====
+2026-04-03 17:19:55 | INFO | Total samples: 1512
+2026-04-03 17:19:55 | INFO | Class distribution:
+2026-04-03 17:19:55 | INFO |   Class 0: 171 samples (11.31%)
+2026-04-03 17:19:55 | INFO |   Class 1: 909 samples (60.12%)
+2026-04-03 17:19:55 | INFO |   Class 2: 93 samples (6.15%)
+2026-04-03 17:19:55 | INFO |   Class 3: 43 samples (2.84%)
+2026-04-03 17:19:55 | INFO |   Class 4: 217 samples (14.35%)
+2026-04-03 17:19:55 | INFO |   Class 5: 44 samples (2.91%)
+2026-04-03 17:19:55 | INFO |   Class 6: 35 samples (2.31%)
+2026-04-03 17:20:29 | INFO | Epoch [1/100]
+2026-04-03 17:20:29 | INFO | Train Loss: 1.8664 | Train Acc: 0.4817 | Val Loss: 1.2425 | Val Acc: 0.7772

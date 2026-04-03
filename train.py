@@ -98,7 +98,10 @@ def train_one_epoch(model, train_loader, val_loader,
         optimizer.step()
 
         train_loss += loss.item()
-        preds = outputs.argmax(dim=1)
+        if MODEL_NAME == "vit_moe":
+            preds = final_logits.argmax(dim=1)
+        else:
+            preds = outputs.argmax(dim=1)
 
         # ===== Train accuracy =====
         if lam < 1.0:
@@ -124,11 +127,26 @@ def train_one_epoch(model, train_loader, val_loader,
             imgs = imgs.to(DEVICE)
             labels = labels.to(DEVICE)
 
-            outputs = model(imgs)
-            loss = criterion(outputs, labels)
+            outputs = model(imgs)  
+
+            if MODEL_NAME == "vit_moe":
+                final_logits, block_logits = outputs
+
+                main_loss = criterion(final_logits, labels)
+                aux_loss = sum(
+                    criterion(logit, labels)
+                    for logit in block_logits
+                ) / len(block_logits)
+
+                loss = main_loss + 0.3 * aux_loss
+
+            else:
+                loss = criterion(outputs, labels)
+                final_logits = outputs
+
             val_loss += loss.item()
 
-            preds = outputs.argmax(dim=1)
+            preds = final_logits.argmax(dim=1) 
             val_correct += (preds == labels).sum().item()
             val_total += labels.size(0)
 
@@ -148,8 +166,11 @@ def evaluate(model, loader, num_classes):
     for imgs, labels in tqdm(loader, desc="Evaluating", leave=False):
         imgs = imgs.to(DEVICE)
         labels = labels.to(DEVICE)
-
-        outputs = model(imgs)
+        if MODEL_NAME == 'vit_moe':
+            final_logits, block_logits = model(imgs)
+            outputs = final_logits
+        else:
+            outputs = model(imgs)
 
         all_logits.append(outputs)
         all_labels.append(labels)
@@ -240,7 +261,7 @@ if __name__ == "__main__":
         scheduler.step()
 
         # ===== Test every 20 epochs =====
-        if (epoch + 1) % 20 == 0:
+        if (epoch + 1) % 2 == 0:
             test_metrics = evaluate(model, test_loader, num_classes)
             logger.info(f"--- TEST METRICS @ Epoch {epoch+1} ---")
             for k, v in test_metrics.items():
