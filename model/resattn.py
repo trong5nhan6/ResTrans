@@ -115,7 +115,7 @@ class FullAttnResClassifier(nn.Module):
             is_dino = True
 
         elif backbone_name == "vitb16":
-            vit = models.vit_b_16(pretrained=True)
+            vit = models.vit_b_16(pretrained=False)
             is_dino = False
         else:
             raise ValueError("backbone_name must be 'dinov2' or 'vitb16'")

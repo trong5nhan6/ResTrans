@@ -8,7 +8,9 @@ from torch.optim.lr_scheduler import CosineAnnealingLR
 from config import DATA_ROOT, LOG_DIR, MODEL_DIR, BATCH_SIZE, NUM_WORKERS, LR, WEIGHT_DECAY, DEVICE, NUM_EPOCHS, MODEL_NAME, USE_CUTMIX, USE_MIXUP, ALPHA_MIXUP, ALPHA_CUTMIX, MINORITY_CLASS
 from data.ISIC2018 import ISIC2018
 from model.basemodel import BaseModel
+from model.block_resattn import BlockAttnResClassifier
 from model.resattn import FullAttnResClassifier
+from model.vit_moe import ViT_BlockMoE
 from tqdm import tqdm
 import numpy as np
 
@@ -57,15 +59,40 @@ def train_one_epoch(model, train_loader, val_loader,
                 )
         else:
             targets_a, targets_b, lam = labels, labels, 1.0
-
-        # ===== Forward + Loss =====
         outputs = model(imgs)
-        if lam < 1.0:
-            # Mixup / CutMix loss
-            loss = mixup_criterion(criterion, outputs, targets_a, targets_b, lam)
+
+        # ===== LOSS =====
+        if MODEL_NAME == "vit_moe":
+            final_logits, block_logits = outputs
+
+            if lam < 1.0:
+                # ----- Mixup -----
+                main_loss = mixup_criterion(criterion, final_logits, targets_a, targets_b, lam)
+
+                aux_loss = sum(
+                    mixup_criterion(criterion, logit, targets_a, targets_b, lam)
+                    for logit in block_logits
+                ) / len(block_logits)
+
+            else:
+                # ----- Normal -----
+                main_loss = criterion(final_logits, labels)
+
+                aux_loss = sum(
+                    criterion(logit, labels)
+                    for logit in block_logits
+                ) / len(block_logits)
+
+            loss = main_loss + 0.3 * aux_loss
+
         else:
-            # Normal loss
-            loss = criterion(outputs, labels)
+            # ===== Model thường =====
+            if lam < 1.0:
+                loss = mixup_criterion(criterion, outputs, targets_a, targets_b, lam)
+                final_logits = outputs
+            else:
+                loss = criterion(outputs, labels)
+                final_logits = outputs
 
         loss.backward()
         optimizer.step()
@@ -166,10 +193,15 @@ if __name__ == "__main__":
     # =========================
     # 6. Model (baseline)
     # =========================
-    if MODEL_NAME != 'resattn':
-        model = BaseModel(model_name=MODEL_NAME, num_classes=num_classes)
-    else:
+    if MODEL_NAME == 'resattn':
         model = FullAttnResClassifier(num_classes=num_classes)
+    elif MODEL_NAME == 'block_resattn':
+        model = BlockAttnResClassifier(num_classes=num_classes)
+    elif MODEL_NAME == 'vit_moe':
+        model = ViT_BlockMoE(num_classes=num_classes)
+    else:
+        model = BaseModel(model_name=MODEL_NAME, num_classes=num_classes)
+
     model = model.to(DEVICE)
 
     # =========================
