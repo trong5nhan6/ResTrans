@@ -33,15 +33,30 @@ def train_one_epoch(model, train_loader, val_loader,
         # ===== Randomly apply Class-aware Mixup or CutMix =====
         r = np.random.rand()
         if USE_MIXUP and r < 0.5:
-            imgs, targets_a, targets_b, lam = mixup_data_class_aware(
-                imgs, labels, alpha=alpha_mixup, minority_classes=minority_class
-            )
+            if minority_class is None:
+                # Mixup thường
+                imgs, targets_a, targets_b, lam = mixup_data(
+                    imgs, labels, alpha=alpha_mixup
+                )
+            else:
+                # Mixup class-aware
+                imgs, targets_a, targets_b, lam = mixup_data_class_aware(
+                    imgs, labels, alpha=alpha_mixup, minority_classes=minority_class
+                )
+
         elif USE_CUTMIX:
-            imgs, targets_a, targets_b, lam = cutmix_data_class_aware(
-                imgs, labels, alpha=alpha_cutmix, minority_classes=minority_class
-            )
+            if minority_class is None:
+                # CutMix thường
+                imgs, targets_a, targets_b, lam = cutmix_data(
+                    imgs, labels, alpha=alpha_cutmix
+                )
+            else:
+                # CutMix class-aware
+                imgs, targets_a, targets_b, lam = cutmix_data_class_aware(
+                    imgs, labels, alpha=alpha_cutmix, minority_classes=minority_class
+                )
         else:
-            targets_a, targets_b, lam = labels, labels, 1.0  # fallback no mix
+            targets_a, targets_b, lam = labels, labels, 1.0
 
         # ===== Forward + Loss =====
         outputs = model(imgs)
@@ -170,7 +185,7 @@ if __name__ == "__main__":
     # =========================
     # 9. Training loop
     # =========================
-    log_name = f"{MODEL_NAME}_mixup_{USE_MIXUP}_cutmix_{USE_CUTMIX}_cosine_classifier.log"
+    log_name = f"{MODEL_NAME}_mixup_{USE_MIXUP}_cutmix_{USE_CUTMIX}_cosine_classifier_no_minor.log"
     logger = setup_logger(log_dir=LOG_DIR, log_name=log_name)
 
     log_dataset_info(logger, train_dataset, "Train")
