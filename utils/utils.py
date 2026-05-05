@@ -163,29 +163,35 @@ def get_transform(is_train=True):
                         [0.229, 0.224, 0.225])
         ])
 
+
 class FocalLoss(nn.Module):
-    def __init__(self, num_classes, gamma=2.0, weight=None, device="cuda"):
+    def __init__(self, gamma=2.0, alpha=None, reduction="mean"):
         super().__init__()
         self.gamma = gamma
-        self.device = device
-        self.num_classes = num_classes
-        self.weight = weight.to(device) if weight is not None else None
-        
-        # Learnable class bias term
-        self.class_bias = nn.Parameter(torch.zeros(num_classes, device=device))
+        self.alpha = alpha  # tensor shape [num_classes] hoặc None
+        self.reduction = reduction
 
-    def forward(self, logits, targets):
-        # Add learnable bias
-        logits = logits + self.class_bias
+    def forward(self, inputs, targets):
+        """
+        inputs: logits (B, C)
+        targets: (B,)
+        """
+        ce_loss = F.cross_entropy(inputs, targets, reduction="none")
 
-        # Compute CE loss without reduction
-        ce_loss = F.cross_entropy(logits, targets, weight=self.weight, reduction='none')
+        pt = torch.exp(-ce_loss)  # prob đúng class
 
-        # Focal scaling
-        pt = torch.exp(-ce_loss)
-        loss = ((1 - pt) ** self.gamma * ce_loss)
+        focal_loss = (1 - pt) ** self.gamma * ce_loss
 
-        return loss.mean()
+        if self.alpha is not None:
+            at = self.alpha.gather(0, targets)
+            focal_loss = at * focal_loss
+
+        if self.reduction == "mean":
+            return focal_loss.mean()
+        elif self.reduction == "sum":
+            return focal_loss.sum()
+        else:
+            return focal_loss
 
 class Cutout:
     def __init__(self, n_holes=1, length=50):

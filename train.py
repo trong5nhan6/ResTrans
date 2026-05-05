@@ -5,7 +5,7 @@ import os
 import numpy as np
 from torch.utils.data import DataLoader, WeightedRandomSampler
 from torch.optim.lr_scheduler import CosineAnnealingLR
-from config import DATA_ROOT, LOG_DIR, MODEL_DIR, BATCH_SIZE, NUM_WORKERS, LR, WEIGHT_DECAY, DEVICE, NUM_EPOCHS, MODEL_NAME, USE_CUTMIX, USE_MIXUP, ALPHA_MIXUP, ALPHA_CUTMIX, MINORITY_CLASS
+from config import DATA_ROOT, LOG_DIR, MODEL_DIR, BATCH_SIZE, NUM_WORKERS, LR, WEIGHT_DECAY, DEVICE, NUM_EPOCHS, MODEL_NAME, USE_CUTMIX, USE_MIXUP, ALPHA_MIXUP, ALPHA_CUTMIX, MINORITY_CLASS, FOCAL_LOSS, GAMMA, ALPHA, REDUCTION
 from data.ISIC2018 import ISIC2018
 from model.basemodel import BaseModel
 from model.block_resattn import BlockAttnResClassifier
@@ -14,6 +14,7 @@ from model.vit_moe import ViT_BlockMoE
 from model.vitb16_resattn import ViTB16_AttnRes
 from tqdm import tqdm
 import numpy as np
+import time
 
 # =========================
 # 8. Train / Eval
@@ -40,7 +41,7 @@ def train_one_epoch(model, train_loader, val_loader,
                 # Mixup thường
                 imgs, targets_a, targets_b, lam = mixup_data(
                     imgs, labels, alpha=alpha_mixup
-                )
+                )   
             else:
                 # Mixup class-aware
                 imgs, targets_a, targets_b, lam = mixup_data_class_aware(
@@ -233,7 +234,10 @@ if __name__ == "__main__":
     # =========================
     class_weights_tensor = torch.tensor(class_weights, dtype=torch.float32).to(DEVICE)
 
-    criterion = nn.CrossEntropyLoss()
+    if FOCAL_LOSS:
+        criterion = FocalLoss(gamma=GAMMA, alpha=ALPHA, reduction=REDUCTION)
+    else:
+        criterion = nn.CrossEntropyLoss()
     # criterion = nn.CrossEntropyLoss(weight=class_weights_tensor)
     # criterion = FocalLoss(num_classes=num_classes, gamma=1.0, weight=class_weights_tensor)
     optimizer = torch.optim.AdamW(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
@@ -249,6 +253,7 @@ if __name__ == "__main__":
     log_dataset_info(logger, test_dataset, "Test")
 
     EPOCHS = NUM_EPOCHS
+    start_time = time.time()
     for epoch in range(EPOCHS):
         train_loss, train_acc, val_loss, val_acc = train_one_epoch(
             model, train_loader, val_loader,
@@ -258,17 +263,20 @@ if __name__ == "__main__":
             alpha_cutmix=ALPHA_CUTMIX,
             minority_class=MINORITY_CLASS
         )
-
         logger.info(f"Epoch [{epoch+1}/{EPOCHS}]")
         logger.info(f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.4f} | Val Loss: {val_loss:.4f} | Val Acc: {val_acc:.4f}")
         scheduler.step()
 
         # ===== Test every 20 epochs =====
-        if (epoch + 1) % 2 == 0:
+        if (epoch + 1) % 20 == 0:
             test_metrics = evaluate(model, test_loader, num_classes)
             logger.info(f"--- TEST METRICS @ Epoch {epoch+1} ---")
             for k, v in test_metrics.items():
                 logger.info(f"{k}: {v:.4f}")
+                
+    end_time = time.time()
+    train_time = end_time - start_time
+    logger.info(f"Total Train Time: {train_time:.2f}s")
 
     flops, params = compute_model_complexity(model)
     logger.info("===== MODEL INFO =====")

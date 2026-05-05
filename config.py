@@ -4,10 +4,14 @@ DATA_ROOT = "./datasets/ISIC 2018"
 LOG_DIR = "logs_vitb16_resattn"
 MODEL_DIR = "models"
 
-BATCH_SIZE = 64    
+BATCH_SIZE = 32
 NUM_WORKERS = 4
 LR = 1e-4
 WEIGHT_DECAY = 1e-4
+FOCAL_LOSS = True
+GAMMA = 2.0
+ALPHA = None
+REDUCTION = "mean"
 
 NUM_EPOCHS = 100
 
