@@ -11,6 +11,7 @@ from model.basemodel import BaseModel
 from model.block_resattn import BlockAttnResClassifier
 from model.resattn import FullAttnResClassifier
 from model.vit_moe import ViT_BlockMoE
+from model.vitb16_resattn import ViTB16_AttnRes
 from tqdm import tqdm
 import numpy as np
 
@@ -220,6 +221,8 @@ if __name__ == "__main__":
         model = BlockAttnResClassifier(num_classes=num_classes)
     elif MODEL_NAME == 'vit_moe':
         model = ViT_BlockMoE(num_classes=num_classes)
+    elif MODEL_NAME == 'vitb16_resattn':
+        model = ViTB16_AttnRes(block_size=3, num_classes=num_classes)
     else:
         model = BaseModel(model_name=MODEL_NAME, num_classes=num_classes)
 

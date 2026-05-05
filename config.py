@@ -1,7 +1,7 @@
 import torch
 
 DATA_ROOT = "./datasets/ISIC 2018" 
-LOG_DIR = "logs"
+LOG_DIR = "logs_vitb16_resattn"
 MODEL_DIR = "models"
 
 BATCH_SIZE = 64    
@@ -17,5 +17,5 @@ ALPHA_MIXUP = 0.4
 ALPHA_CUTMIX = 1.0
 MINORITY_CLASS = None
 
-MODEL_NAME = "vit_moe" # vit_moe "swinv2", "vit", "resnet152", dinov2 "convnext" , resattn, block_resattn, vit_moe
+MODEL_NAME = "vitb16_resattn" # vit_moe "swinv2", "vit", "resnet152", dinov2 "convnext" , resattn, block_resattn, vit_moe
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
