@@ -15,16 +15,19 @@ import numpy as np
 
 def compute_model_complexity(model, input_size=(1, 3, 224, 224), device="cuda"):
     model.eval()
+    model = model.to(device)
 
     dummy_input = torch.randn(input_size).to(device)
-
-    flops, params = profile(model, inputs=(dummy_input,), verbose=False)
-
-    # convert
+    params = sum(p.numel() for p in model.parameters())
+    try:
+        flops, _ = profile(model, inputs=(dummy_input,), verbose=False)
+    except:
+        flops = 0  # fallback nếu thop fail
     flops = flops / 1e9      # GFLOPs
     params = params / 1e6    # Millions
 
     return flops, params
+
 
 def count_params(model):
     return sum(p.numel() for p in model.parameters())

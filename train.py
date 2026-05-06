@@ -206,8 +206,6 @@ if __name__ == "__main__":
     print('sample_weights:', class_weights)
     sampler = WeightedRandomSampler(sample_weights, num_samples=len(sample_weights), replacement=True)
 
-    print("Total parameters:", count_params(model))
-
     # =========================
     # 5. DataLoader
     # =========================
@@ -225,7 +223,7 @@ if __name__ == "__main__":
     elif MODEL_NAME == 'vit_moe':
         model = ViT_BlockMoE(num_classes=num_classes)
     elif MODEL_NAME == 'vitb16_resattn':
-        model = ViTB16_AttnRes(block_size=3, num_classes=num_classes)
+        model = ViTB16_AttnRes(block_size=4, num_classes=num_classes)
     else:
         model = BaseModel(model_name=MODEL_NAME, num_classes=num_classes)
 
@@ -247,12 +245,13 @@ if __name__ == "__main__":
     # =========================
     # 9. Training loop
     # =========================
-    log_name = f"{MODEL_NAME}_mixup_{USE_MIXUP}_cutmix_{USE_CUTMIX}_cosine_classifier_no_minor.log"
+    log_name = f"{MODEL_NAME}_mixup_{USE_MIXUP}_cutmix_{USE_CUTMIX}_minority_{MINORITY_CLASS}_FOCALLOSS_{FOCAL_LOSS}_zero_init.log"
     logger = setup_logger(log_dir=LOG_DIR, log_name=log_name)
 
     log_dataset_info(logger, train_dataset, "Train")
     log_dataset_info(logger, val_dataset, "Validation")
     log_dataset_info(logger, test_dataset, "Test")
+    print("Total parameters:", count_params(model))
 
     EPOCHS = NUM_EPOCHS
     start_time = time.time()
@@ -270,7 +269,7 @@ if __name__ == "__main__":
         scheduler.step()
 
         # ===== Test every 20 epochs =====
-        if (epoch + 1) % 20 == 0:
+        if (epoch + 1) % 10 == 0:
             test_metrics = evaluate(model, test_loader, num_classes)
             logger.info(f"--- TEST METRICS @ Epoch {epoch+1} ---")
             for k, v in test_metrics.items():

@@ -61,6 +61,9 @@ class AttnResBlock(nn.Module):
         self.block_size = block_size
         self.layer_number = layer_number
 
+        nn.init.zeros_(self.attn_res_proj.weight)
+        nn.init.zeros_(self.mlp_res_proj.weight)
+
     def forward(self, blocks, hidden_states):
         partial_block = hidden_states
 
