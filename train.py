@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from utils.utils import setup_logger, log_dataset_info, compute_model_complexity, compute_metrics, get_transform, FocalLoss, cutmix_data, mixup_data, mixup_criterion, cutmix_data_class_aware, mixup_data_class_aware
+from utils.utils import setup_logger, log_dataset_info, compute_model_complexity, compute_metrics, get_transform, FocalLoss, cutmix_data, mixup_data, mixup_criterion, cutmix_data_class_aware, mixup_data_class_aware, count_params
 import os
 import numpy as np
 from torch.utils.data import DataLoader, WeightedRandomSampler
@@ -205,6 +205,8 @@ if __name__ == "__main__":
     sample_weights = [class_weights[l] for l in labels]
     print('sample_weights:', class_weights)
     sampler = WeightedRandomSampler(sample_weights, num_samples=len(sample_weights), replacement=True)
+
+    print("Total parameters:", count_params(model))
 
     # =========================
     # 5. DataLoader

@@ -26,6 +26,9 @@ def compute_model_complexity(model, input_size=(1, 3, 224, 224), device="cuda"):
 
     return flops, params
 
+def count_params(model):
+    return sum(p.numel() for p in model.parameters())
+    
 # =========================
 # 1. Accuracy
 # =========================
