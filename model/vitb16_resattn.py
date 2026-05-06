@@ -119,10 +119,7 @@ class ViTB16_AttnRes(nn.Module):
         self.vit.encoder.layers = new_layers
         self.head = nn.Sequential(
             nn.LayerNorm(dim),
-            nn.Linear(dim, dim*2),
-            nn.GELU(),
-            nn.Dropout(0.2),
-            nn.Linear(dim*2, num_classes)
+            nn.Linear(dim, num_classes)
         )
 
     def forward(self, x):
@@ -151,3 +148,42 @@ class ViTB16_AttnRes(nn.Module):
         out = self.head(cls)
 
         return out
+
+from collections import defaultdict
+
+def print_params_by_block(model):
+    blocks = defaultdict(int)
+    trainable_blocks = defaultdict(int)
+
+    total = 0
+    total_trainable = 0
+
+    for name, param in model.named_parameters():
+        num = param.numel()
+        total += num
+
+        if param.requires_grad:
+            total_trainable += num
+
+        # xác định block
+        if "vit.encoder.layers" in name:
+            # ví dụ: vit.encoder.layers.3.attn...
+            block_id = name.split(".")[2]  # lấy index layer
+            key = f"Block {block_id}"
+        else:
+            key = "Other (head / embedding)"
+
+        blocks[key] += num
+        if param.requires_grad:
+            trainable_blocks[key] += num
+
+    print("\n=========== PARAMS BY BLOCK ===========")
+    for k in sorted(blocks.keys(), key=lambda x: str(x)):
+        print(f"{k:25} | total: {blocks[k]:>10,} | trainable: {trainable_blocks[k]:>10,}")
+
+    print("\n=========== OVERALL ===========")
+    print(f"Total params     : {total:,}")
+    print(f"Trainable params : {total_trainable:,}")
+
+model = ViTB16_AttnRes()
+print_params_by_block(model)
