@@ -19,23 +19,40 @@ class RMSNorm(nn.Module):
 # =========================
 # Block AttnRes
 # =========================
+# def block_attn_res(blocks, partial_block, proj, norm):
+#     """
+#     blocks: list of [B, T, D]
+#     partial_block: [B, T, D]
+#     """
+#     V = torch.stack(blocks + [partial_block])  # [N+1, B, T, D]
+#     K = norm(V)
+
+#     # weight: [1, D] -> [D]
+#     w = proj.weight.squeeze()
+
+#     logits = torch.einsum('d, n b t d -> n b t', w, K)
+#     attn = logits.softmax(0)
+
+#     h = torch.einsum('n b t, n b t d -> b t d', attn, V)
+#     return h
 def block_attn_res(blocks, partial_block, proj, norm):
-    """
-    blocks: list of [B, T, D]
-    partial_block: [B, T, D]
-    """
     V = torch.stack(blocks + [partial_block])  # [N+1, B, T, D]
     K = norm(V)
 
-    # weight: [1, D] -> [D]
-    w = proj.weight.squeeze()
+    # [N+1, B, T, D]
+    logits = proj(K)
 
-    logits = torch.einsum('d, n b t d -> n b t', w, K)
+    # reduce theo feature
+    logits = logits.mean(-1)   # hoặc sum(-1)
+
+    # normalize logits (QUAN TRỌNG)
+    # logits = logits - logits.mean(dim=0, keepdim=True)
+    # logits = logits / (logits.std(dim=0, keepdim=True) + 1e-6)
+
     attn = logits.softmax(0)
 
     h = torch.einsum('n b t, n b t d -> b t d', attn, V)
     return h
-
 
 # =========================
 # AttnRes Block
@@ -52,14 +69,20 @@ class AttnResBlock(nn.Module):
         self.mlp_norm = vit_block.ln_2
 
         # new params
-        self.attn_res_proj = nn.Linear(dim, 1, bias=False)
-        self.mlp_res_proj = nn.Linear(dim, 1, bias=False)
+        # self.attn_res_proj = nn.Linear(dim, 1, bias=False)
+        # self.mlp_res_proj = nn.Linear(dim, 1, bias=False)
+        
+        self.attn_res_proj = nn.Linear(dim, dim, bias=True)
+        self.mlp_res_proj = nn.Linear(dim, dim, bias=True)
 
         self.attn_res_norm = RMSNorm(dim)
         self.mlp_res_norm = RMSNorm(dim)
 
         self.block_size = block_size
         self.layer_number = layer_number
+
+        nn.init.zeros_(self.attn_res_proj.weight)
+        nn.init.zeros_(self.mlp_res_proj.weight)
 
     def forward(self, blocks, hidden_states):
         partial_block = hidden_states

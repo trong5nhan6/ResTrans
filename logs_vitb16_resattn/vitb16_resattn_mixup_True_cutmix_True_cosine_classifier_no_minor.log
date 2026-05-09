@@ -272,3 +272,120 @@
 2026-05-05 17:17:29 | INFO | Model: vitb16_resattn
 2026-05-05 17:17:29 | INFO | GFLOPs: 11.30
 2026-05-05 17:17:29 | INFO | Params (M): 58.49
+
+
+
+2026-05-06 02:31:35 | INFO | ===== TRAIN DATASET =====
+2026-05-06 02:31:35 | INFO | Total samples: 10015
+2026-05-06 02:31:35 | INFO | Class distribution:
+2026-05-06 02:31:35 | INFO |   Class 0: 1113 samples (11.11%)
+2026-05-06 02:31:35 | INFO |   Class 1: 6705 samples (66.95%)
+2026-05-06 02:31:35 | INFO |   Class 2: 514 samples (5.13%)
+2026-05-06 02:31:35 | INFO |   Class 3: 327 samples (3.27%)
+2026-05-06 02:31:35 | INFO |   Class 4: 1099 samples (10.97%)
+2026-05-06 02:31:35 | INFO |   Class 5: 115 samples (1.15%)
+2026-05-06 02:31:35 | INFO |   Class 6: 142 samples (1.42%)
+2026-05-06 02:31:35 | INFO | ===== VALIDATION DATASET =====
+2026-05-06 02:31:35 | INFO | Total samples: 193
+2026-05-06 02:31:35 | INFO | Class distribution:
+2026-05-06 02:31:35 | INFO |   Class 0: 21 samples (10.88%)
+2026-05-06 02:31:35 | INFO |   Class 1: 123 samples (63.73%)
+2026-05-06 02:31:35 | INFO |   Class 2: 15 samples (7.77%)
+2026-05-06 02:31:35 | INFO |   Class 3: 8 samples (4.15%)
+2026-05-06 02:31:35 | INFO |   Class 4: 22 samples (11.40%)
+2026-05-06 02:31:35 | INFO |   Class 5: 1 samples (0.52%)
+2026-05-06 02:31:35 | INFO |   Class 6: 3 samples (1.55%)
+2026-05-06 02:31:35 | INFO | ===== TEST DATASET =====
+2026-05-06 02:31:35 | INFO | Total samples: 1512
+2026-05-06 02:31:35 | INFO | Class distribution:
+2026-05-06 02:31:35 | INFO |   Class 0: 171 samples (11.31%)
+2026-05-06 02:31:35 | INFO |   Class 1: 909 samples (60.12%)
+2026-05-06 02:31:35 | INFO |   Class 2: 93 samples (6.15%)
+2026-05-06 02:31:35 | INFO |   Class 3: 43 samples (2.84%)
+2026-05-06 02:31:35 | INFO |   Class 4: 217 samples (14.35%)
+2026-05-06 02:31:35 | INFO |   Class 5: 44 samples (2.91%)
+2026-05-06 02:31:35 | INFO |   Class 6: 35 samples (2.31%)
+2026-05-06 02:32:35 | INFO | ===== TRAIN DATASET =====
+2026-05-06 02:32:35 | INFO | Total samples: 10015
+2026-05-06 02:32:35 | INFO | Class distribution:
+2026-05-06 02:32:35 | INFO |   Class 0: 1113 samples (11.11%)
+2026-05-06 02:32:35 | INFO |   Class 1: 6705 samples (66.95%)
+2026-05-06 02:32:35 | INFO |   Class 2: 514 samples (5.13%)
+2026-05-06 02:32:35 | INFO |   Class 3: 327 samples (3.27%)
+2026-05-06 02:32:35 | INFO |   Class 4: 1099 samples (10.97%)
+2026-05-06 02:32:35 | INFO |   Class 5: 115 samples (1.15%)
+2026-05-06 02:32:35 | INFO |   Class 6: 142 samples (1.42%)
+2026-05-06 02:32:35 | INFO | ===== VALIDATION DATASET =====
+2026-05-06 02:32:35 | INFO | Total samples: 193
+2026-05-06 02:32:35 | INFO | Class distribution:
+2026-05-06 02:32:35 | INFO |   Class 0: 21 samples (10.88%)
+2026-05-06 02:32:35 | INFO |   Class 1: 123 samples (63.73%)
+2026-05-06 02:32:35 | INFO |   Class 2: 15 samples (7.77%)
+2026-05-06 02:32:35 | INFO |   Class 3: 8 samples (4.15%)
+2026-05-06 02:32:35 | INFO |   Class 4: 22 samples (11.40%)
+2026-05-06 02:32:35 | INFO |   Class 5: 1 samples (0.52%)
+2026-05-06 02:32:35 | INFO |   Class 6: 3 samples (1.55%)
+2026-05-06 02:32:35 | INFO | ===== TEST DATASET =====
+2026-05-06 02:32:35 | INFO | Total samples: 1512
+2026-05-06 02:32:35 | INFO | Class distribution:
+2026-05-06 02:32:35 | INFO |   Class 0: 171 samples (11.31%)
+2026-05-06 02:32:35 | INFO |   Class 1: 909 samples (60.12%)
+2026-05-06 02:32:35 | INFO |   Class 2: 93 samples (6.15%)
+2026-05-06 02:32:35 | INFO |   Class 3: 43 samples (2.84%)
+2026-05-06 02:32:35 | INFO |   Class 4: 217 samples (14.35%)
+2026-05-06 02:32:35 | INFO |   Class 5: 44 samples (2.91%)
+2026-05-06 02:32:35 | INFO |   Class 6: 35 samples (2.31%)
+2026-05-06 02:35:01 | INFO | Epoch [1/5]
+2026-05-06 02:35:01 | INFO | Train Loss: 1.2739 | Train Acc: 0.2905 | Val Loss: 0.9998 | Val Acc: 0.4560
+2026-05-06 02:37:27 | INFO | Epoch [2/5]
+2026-05-06 02:37:27 | INFO | Train Loss: 1.1000 | Train Acc: 0.3742 | Val Loss: 0.8123 | Val Acc: 0.5492
+2026-05-06 02:39:54 | INFO | Epoch [3/5]
+2026-05-06 02:39:54 | INFO | Train Loss: 1.0112 | Train Acc: 0.4225 | Val Loss: 0.7610 | Val Acc: 0.5130
+2026-05-06 02:42:20 | INFO | Epoch [4/5]
+2026-05-06 02:42:20 | INFO | Train Loss: 0.9238 | Train Acc: 0.4771 | Val Loss: 0.5032 | Val Acc: 0.6736
+2026-05-06 02:44:47 | INFO | Epoch [5/5]
+2026-05-06 02:44:47 | INFO | Train Loss: 0.8744 | Train Acc: 0.5075 | Val Loss: 0.5297 | Val Acc: 0.6269
+2026-05-06 02:44:47 | INFO | Total Train Time: 732.09s
+2026-05-06 02:44:47 | INFO | ===== MODEL INFO =====
+2026-05-06 02:44:47 | INFO | Model: vitb16_resattn
+2026-05-06 02:44:47 | INFO | GFLOPs: 11.30
+2026-05-06 02:44:47 | INFO | Params (M): 57.31
+2026-05-06 02:47:15 | INFO | ===== TRAIN DATASET =====
+2026-05-06 02:47:15 | INFO | Total samples: 10015
+2026-05-06 02:47:15 | INFO | Class distribution:
+2026-05-06 02:47:15 | INFO |   Class 0: 1113 samples (11.11%)
+2026-05-06 02:47:15 | INFO |   Class 1: 6705 samples (66.95%)
+2026-05-06 02:47:15 | INFO |   Class 2: 514 samples (5.13%)
+2026-05-06 02:47:15 | INFO |   Class 3: 327 samples (3.27%)
+2026-05-06 02:47:15 | INFO |   Class 4: 1099 samples (10.97%)
+2026-05-06 02:47:15 | INFO |   Class 5: 115 samples (1.15%)
+2026-05-06 02:47:15 | INFO |   Class 6: 142 samples (1.42%)
+2026-05-06 02:47:15 | INFO | ===== VALIDATION DATASET =====
+2026-05-06 02:47:15 | INFO | Total samples: 193
+2026-05-06 02:47:15 | INFO | Class distribution:
+2026-05-06 02:47:15 | INFO |   Class 0: 21 samples (10.88%)
+2026-05-06 02:47:15 | INFO |   Class 1: 123 samples (63.73%)
+2026-05-06 02:47:15 | INFO |   Class 2: 15 samples (7.77%)
+2026-05-06 02:47:15 | INFO |   Class 3: 8 samples (4.15%)
+2026-05-06 02:47:15 | INFO |   Class 4: 22 samples (11.40%)
+2026-05-06 02:47:15 | INFO |   Class 5: 1 samples (0.52%)
+2026-05-06 02:47:15 | INFO |   Class 6: 3 samples (1.55%)
+2026-05-06 02:47:15 | INFO | ===== TEST DATASET =====
+2026-05-06 02:47:15 | INFO | Total samples: 1512
+2026-05-06 02:47:15 | INFO | Class distribution:
+2026-05-06 02:47:15 | INFO |   Class 0: 171 samples (11.31%)
+2026-05-06 02:47:15 | INFO |   Class 1: 909 samples (60.12%)
+2026-05-06 02:47:15 | INFO |   Class 2: 93 samples (6.15%)
+2026-05-06 02:47:15 | INFO |   Class 3: 43 samples (2.84%)
+2026-05-06 02:47:15 | INFO |   Class 4: 217 samples (14.35%)
+2026-05-06 02:47:15 | INFO |   Class 5: 44 samples (2.91%)
+2026-05-06 02:47:15 | INFO |   Class 6: 35 samples (2.31%)
+2026-05-06 02:49:41 | INFO | Epoch [1/2]
+2026-05-06 02:49:41 | INFO | Train Loss: 1.2138 | Train Acc: 0.3217 | Val Loss: 1.0148 | Val Acc: 0.5233
+2026-05-06 02:52:08 | INFO | Epoch [2/2]
+2026-05-06 02:52:08 | INFO | Train Loss: 1.0397 | Train Acc: 0.4124 | Val Loss: 0.9528 | Val Acc: 0.4663
+2026-05-06 02:52:08 | INFO | Total Train Time: 292.46s
+2026-05-06 02:52:08 | INFO | ===== MODEL INFO =====
+2026-05-06 02:52:08 | INFO | Model: vitb16_resattn
+2026-05-06 02:52:08 | INFO | GFLOPs: 11.30
+2026-05-06 02:52:08 | INFO | Params (M): 86.61
