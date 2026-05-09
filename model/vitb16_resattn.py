@@ -1,3 +1,4 @@
+import math
 import torch
 import torch.nn as nn
 from torchvision.models import vit_b_16
@@ -19,36 +20,17 @@ class RMSNorm(nn.Module):
 # =========================
 # Block AttnRes
 # =========================
-# def block_attn_res(blocks, partial_block, proj, norm):
-#     """
-#     blocks: list of [B, T, D]
-#     partial_block: [B, T, D]
-#     """
-#     V = torch.stack(blocks + [partial_block])  # [N+1, B, T, D]
-#     K = norm(V)
-
-#     # weight: [1, D] -> [D]
-#     w = proj.weight.squeeze()
-
-#     logits = torch.einsum('d, n b t d -> n b t', w, K)
-#     attn = logits.softmax(0)
-
-#     h = torch.einsum('n b t, n b t d -> b t d', attn, V)
-#     return h
 def block_attn_res(blocks, partial_block, proj, norm):
+    """
+    blocks: list of [B, T, D]
+    partial_block: [B, T, D]
+    """
     V = torch.stack(blocks + [partial_block])  # [N+1, B, T, D]
     K = norm(V)
 
-    # [N+1, B, T, D]
-    logits = proj(K)
+    w = proj.weight.squeeze()  # [D]
 
-    # reduce theo feature
-    logits = logits.mean(-1)   # hoặc sum(-1)
-
-    # normalize logits (QUAN TRỌNG)
-    # logits = logits - logits.mean(dim=0, keepdim=True)
-    # logits = logits / (logits.std(dim=0, keepdim=True) + 1e-6)
-
+    logits = torch.einsum('d, n b t d -> n b t', w, K) / math.sqrt(K.shape[-1])
     attn = logits.softmax(0)
 
     h = torch.einsum('n b t, n b t d -> b t d', attn, V)
@@ -69,14 +51,15 @@ class AttnResBlock(nn.Module):
         self.mlp_norm = vit_block.ln_2
 
         # new params
-        # self.attn_res_proj = nn.Linear(dim, 1, bias=False)
-        # self.mlp_res_proj = nn.Linear(dim, 1, bias=False)
-        
-        self.attn_res_proj = nn.Linear(dim, dim, bias=True)
-        self.mlp_res_proj = nn.Linear(dim, dim, bias=True)
+        self.attn_res_proj = nn.Linear(dim, 1, bias=False)
+        self.mlp_res_proj  = nn.Linear(dim, 1, bias=False)
 
         self.attn_res_norm = RMSNorm(dim)
-        self.mlp_res_norm = RMSNorm(dim)
+        self.mlp_res_norm  = RMSNorm(dim)
+
+        # gamma gate: starts at 0 → pretrained behavior preserved at init
+        self.gamma_attn = nn.Parameter(torch.zeros(1))
+        self.gamma_mlp  = nn.Parameter(torch.zeros(1))
 
         self.block_size = block_size
         self.layer_number = layer_number
@@ -87,27 +70,31 @@ class AttnResBlock(nn.Module):
     def forward(self, blocks, hidden_states):
         partial_block = hidden_states
 
-        # ---- AttnRes before attention ----
-        h = block_attn_res(blocks, partial_block,
-                           self.attn_res_proj, self.attn_res_norm)
-
-        # ---- block boundary ----
-        if self.layer_number % (self.block_size // 2) == 0:
-            blocks.append(partial_block)
-            partial_block = None
-
-        # ---- self-attention ----
-        attn_out, _ = self.attn(self.attn_norm(h), self.attn_norm(h), self.attn_norm(h))
-        if partial_block is None:
-            partial_block = attn_out
+        # ---- Gated ResAttn before attention ----
+        if len(blocks) > 0:
+            h_blend = block_attn_res(blocks, partial_block,
+                                     self.attn_res_proj, self.attn_res_norm)
+            h = partial_block + self.gamma_attn * (h_blend - partial_block)
         else:
-            partial_block = partial_block + attn_out
+            h = partial_block
 
-        # ---- AttnRes before MLP ----
-        h = block_attn_res(blocks, partial_block,
-                           self.mlp_res_proj, self.mlp_res_norm)
+        # ---- self-attention (standard residual, never reset) ----
+        attn_out, _ = self.attn(self.attn_norm(h), self.attn_norm(h), self.attn_norm(h))
+        partial_block = partial_block + attn_out
 
-        # ---- MLP ----
+        # ---- block boundary: save every block_size layers, do NOT reset ----
+        if self.layer_number % self.block_size == 0:
+            blocks.append(partial_block)
+
+        # ---- Gated ResAttn before MLP ----
+        if len(blocks) > 0:
+            h_blend = block_attn_res(blocks, partial_block,
+                                     self.mlp_res_proj, self.mlp_res_norm)
+            h = partial_block + self.gamma_mlp * (h_blend - partial_block)
+        else:
+            h = partial_block
+
+        # ---- MLP (standard residual) ----
         mlp_out = self.mlp(self.mlp_norm(h))
         partial_block = partial_block + mlp_out
 
@@ -171,3 +158,29 @@ class ViTB16_AttnRes(nn.Module):
         out = self.head(cls)
 
         return out
+
+
+if __name__ == "__main__":
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+
+    model = ViTB16_AttnRes(block_size=4, num_classes=7).to(device)
+
+    total = sum(p.numel() for p in model.parameters())
+    trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f"Total params:     {total/1e6:.2f}M")
+    print(f"Trainable params: {trainable/1e6:.2f}M")
+
+    model.eval()
+    x = torch.randn(2, 3, 224, 224).to(device)
+    with torch.no_grad():
+        out = model(x)
+    print(f"Output shape: {out.shape}")
+    print(f"No NaN: {not torch.isnan(out).any()}")
+
+    model.train()
+    x = torch.randn(2, 3, 224, 224).to(device)
+    y = torch.randint(0, 7, (2,)).to(device)
+    out = model(x)
+    loss = torch.nn.CrossEntropyLoss()(out, y)
+    loss.backward()
+    print(f"Loss: {loss.item():.4f} | Backward OK")
