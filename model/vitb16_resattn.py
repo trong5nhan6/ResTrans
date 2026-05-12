@@ -19,40 +19,40 @@ class RMSNorm(nn.Module):
 # =========================
 # Block AttnRes
 # =========================
-# def block_attn_res(blocks, partial_block, proj, norm):
-#     """
-#     blocks: list of [B, T, D]
-#     partial_block: [B, T, D]
-#     """
-#     V = torch.stack(blocks + [partial_block])  # [N+1, B, T, D]
-#     K = norm(V)
-
-#     # weight: [1, D] -> [D]
-#     w = proj.weight.squeeze()
-
-#     logits = torch.einsum('d, n b t d -> n b t', w, K)
-#     attn = logits.softmax(0)
-
-#     h = torch.einsum('n b t, n b t d -> b t d', attn, V)
-#     return h
 def block_attn_res(blocks, partial_block, proj, norm):
+    """
+    blocks: list of [B, T, D]
+    partial_block: [B, T, D]
+    """
     V = torch.stack(blocks + [partial_block])  # [N+1, B, T, D]
     K = norm(V)
 
-    # [N+1, B, T, D]
-    logits = proj(K)
+    # weight: [1, D] -> [D]
+    w = proj.weight.squeeze()
 
-    # reduce theo feature
-    logits = logits.mean(-1)   # hoặc sum(-1)
-
-    # normalize logits (QUAN TRỌNG)
-    # logits = logits - logits.mean(dim=0, keepdim=True)
-    # logits = logits / (logits.std(dim=0, keepdim=True) + 1e-6)
-
+    logits = torch.einsum('d, n b t d -> n b t', w, K)
     attn = logits.softmax(0)
 
     h = torch.einsum('n b t, n b t d -> b t d', attn, V)
     return h
+# def block_attn_res(blocks, partial_block, proj, norm):
+#     V = torch.stack(blocks + [partial_block])  # [N+1, B, T, D]
+#     K = norm(V)
+
+#     # [N+1, B, T, D]
+#     logits = proj(K)
+
+#     # reduce theo feature
+#     logits = logits.mean(-1)   # hoặc sum(-1)
+
+#     # normalize logits (QUAN TRỌNG)
+#     # logits = logits - logits.mean(dim=0, keepdim=True)
+#     # logits = logits / (logits.std(dim=0, keepdim=True) + 1e-6)
+
+#     attn = logits.softmax(0)
+
+#     h = torch.einsum('n b t, n b t d -> b t d', attn, V)
+#     return h
 
 # =========================
 # AttnRes Block
@@ -69,11 +69,11 @@ class AttnResBlock(nn.Module):
         self.mlp_norm = vit_block.ln_2
 
         # new params
-        # self.attn_res_proj = nn.Linear(dim, 1, bias=False)
-        # self.mlp_res_proj = nn.Linear(dim, 1, bias=False)
+        self.attn_res_proj = nn.Linear(dim, 1, bias=False)
+        self.mlp_res_proj = nn.Linear(dim, 1, bias=False)
         
-        self.attn_res_proj = nn.Linear(dim, dim, bias=True)
-        self.mlp_res_proj = nn.Linear(dim, dim, bias=True)
+        # self.attn_res_proj = nn.Linear(dim, dim, bias=True)
+        # self.mlp_res_proj = nn.Linear(dim, dim, bias=True)
 
         self.attn_res_norm = RMSNorm(dim)
         self.mlp_res_norm = RMSNorm(dim)
@@ -171,3 +171,48 @@ class ViTB16_AttnRes(nn.Module):
         out = self.head(cls)
 
         return out
+
+    # def forward(self, x):
+    #     x = self.vit._process_input(x)
+    #     n = x.shape[0]
+    #     cls_token = self.vit.class_token.expand(n, -1, -1)
+    #     x = torch.cat((cls_token, x), dim=1)
+    #     x = x + self.vit.encoder.pos_embedding
+    #     x = self.vit.encoder.dropout(x)
+
+    #     # ── in header ──
+    #     print(f"\n{'Layer':>7} | {'Boundary':>8} | {'len(blocks)':>11} | {'partial_block shape':>20}")
+    #     print("-" * 62)
+    #     print(f"{'Init':>7} | {'':>8} | {1:>11} | {str(tuple(x.shape)):>20}  ← embedding")
+
+    #     blocks = [x]
+    #     partial_block = x
+
+    #     for blk in self.vit.encoder.layers:
+    #         is_boundary = (blk.layer_number % (blk.block_size // 2) == 0)
+    #         blocks, partial_block = blk(blocks, partial_block)
+
+    #         marker = "← SAVE+RESET" if is_boundary else ""
+    #         print(f"{blk.layer_number:>7} | {'YES' if is_boundary else '':>8} | "
+    #               f"{len(blocks):>11} | {str(tuple(partial_block.shape)):>20}  {marker}")
+
+    #     x = self.vit.encoder.ln(partial_block)
+    #     cls = x[:, 0]
+    #     out = self.head(cls)
+
+    #     print(f"\n{'Output':>7} | {'':>8} | {'':>11} | {str(tuple(out.shape)):>20}  ← logits")
+    #     return out
+    
+# ── RUN ──────────────────────────────────────────────────────────────
+if __name__ == "__main__":
+    torch.manual_seed(0)
+
+    model = ViTB16_AttnRes(block_size=6, num_classes=7)
+    model.eval()
+
+    x = torch.randn(1, 3, 224, 224)   # 1 ảnh, 3 kênh, 224x224
+
+    print("Input shape:", x.shape)
+
+    with torch.no_grad():
+        out = model(x)
