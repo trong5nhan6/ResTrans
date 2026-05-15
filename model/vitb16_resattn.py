@@ -97,7 +97,7 @@ class AttnResBlock(nn.Module):
             partial_block = None
 
         # ---- self-attention ----
-        attn_out, _ = self.attn(self.attn_norm(h), self.attn_norm(h), self.attn_norm(h))
+        attn_out, _ = self.attn(self.attn_norm(h), self.attn_norm(h), self.attn_norm(h), need_weights=False)
         if partial_block is None:
             partial_block = attn_out
         else:
@@ -141,9 +141,36 @@ class ViTB16_AttnRes(nn.Module):
 
         self.vit.encoder.layers = new_layers
         self.head = nn.Sequential(
-            nn.LayerNorm(dim),
             nn.Linear(dim, num_classes)
         )
+        self.vit.heads = nn.Identity()
+
+    def get_param_groups(self, lr_base=1e-4, lr_attn_res_norm=1e-3, lr_mlp_res_norm=1e-3, lr_head=1e-3):
+        attn_res_norm_params, mlp_res_norm_params, head_params, other_params = [], [], [], []
+        special_ids = set()
+
+        for blk in self.vit.encoder.layers:
+            for p in blk.attn_res_norm.parameters():
+                attn_res_norm_params.append(p)
+                special_ids.add(id(p))
+            for p in blk.mlp_res_norm.parameters():
+                mlp_res_norm_params.append(p)
+                special_ids.add(id(p))
+
+        for p in self.head.parameters():
+            head_params.append(p)
+            special_ids.add(id(p))
+
+        for p in self.parameters():
+            if id(p) not in special_ids:
+                other_params.append(p)
+
+        return [
+            {"params": other_params,         "lr": lr_base},
+            {"params": attn_res_norm_params, "lr": lr_attn_res_norm},
+            {"params": mlp_res_norm_params,  "lr": lr_mlp_res_norm},
+            {"params": head_params,          "lr": lr_head},
+        ]
 
     def forward(self, x):
         # ---- patch + pos embedding ----
@@ -216,3 +243,4 @@ if __name__ == "__main__":
 
     with torch.no_grad():
         out = model(x)
+    print(model)

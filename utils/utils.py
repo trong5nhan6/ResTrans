@@ -12,6 +12,7 @@ import os
 import torchvision.transforms as T
 import torch.nn as nn
 import numpy as np
+import random
 
 def compute_model_complexity(model, input_size=(1, 3, 224, 224), device="cuda"):
     model.eval()
@@ -154,8 +155,10 @@ def get_transform(is_train=True):
             T.Resize((224,224)),
             T.RandomHorizontalFlip(),
             T.RandomVerticalFlip(),
-            T.RandomRotation(10),
-            T.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1),  # nhẹ hơn
+            T.RandomRotation(180),
+            T.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.3, hue=0.1),  # nhẹ hơn
+            T.RandomAffine(degrees=0, shear=10),
+            T.RandomErasing(p=0.2), 
             T.ToTensor(),
             T.Normalize([0.485, 0.456, 0.406],
                         [0.229, 0.224, 0.225])

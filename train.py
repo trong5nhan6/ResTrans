@@ -2,10 +2,11 @@ import torch
 import torch.nn as nn
 from utils.utils import setup_logger, log_dataset_info, compute_model_complexity, compute_metrics, get_transform, FocalLoss, cutmix_data, mixup_data, mixup_criterion, cutmix_data_class_aware, mixup_data_class_aware, count_params
 import os
+import random
 import numpy as np
 from torch.utils.data import DataLoader, WeightedRandomSampler
 from torch.optim.lr_scheduler import CosineAnnealingLR
-from config import DATA_ROOT, LOG_DIR, MODEL_DIR, BATCH_SIZE, NUM_WORKERS, LR, WEIGHT_DECAY, DEVICE, NUM_EPOCHS, MODEL_NAME, USE_CUTMIX, USE_MIXUP, ALPHA_MIXUP, ALPHA_CUTMIX, MINORITY_CLASS, FOCAL_LOSS, GAMMA, ALPHA, REDUCTION
+from config import DATA_ROOT, LOG_DIR, MODEL_DIR, BATCH_SIZE, NUM_WORKERS, LR, WEIGHT_DECAY, DEVICE, NUM_EPOCHS, MODEL_NAME, USE_CUTMIX, USE_MIXUP, ALPHA_MIXUP, ALPHA_CUTMIX, MINORITY_CLASS, FOCAL_LOSS, GAMMA, ALPHA, REDUCTION, LR_ATTN_RES_NORM, LR_MLP_RES_NORM, LR_HEAD, FREEZE_BACKBONE_EPOCHS, SEED
 from data.ISIC2018 import ISIC2018
 from model.basemodel import BaseModel
 from model.block_resattn import BlockAttnResClassifier
@@ -185,7 +186,21 @@ def evaluate(model, loader, num_classes):
 
     return metrics
 
+def set_seed(seed):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
+def worker_init_fn(worker_id):
+    np.random.seed(SEED + worker_id)
+    random.seed(SEED + worker_id)
+
 if __name__ == "__main__":
+    set_seed(SEED)
+
     # =========================
     # 3. Load dataset
     # =========================
@@ -205,14 +220,19 @@ if __name__ == "__main__":
     class_weights = 1. / class_count
     sample_weights = [class_weights[l] for l in labels]
     print('sample_weights:', class_weights)
-    sampler = WeightedRandomSampler(sample_weights, num_samples=len(sample_weights), replacement=True)
+    g = torch.Generator()
+    g.manual_seed(SEED)
+    sampler = WeightedRandomSampler(sample_weights, num_samples=len(sample_weights), replacement=True, generator=g)
 
     # =========================
     # 5. DataLoader
     # =========================
-    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, sampler=sampler, num_workers=NUM_WORKERS)
-    val_loader   = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=NUM_WORKERS)
-    test_loader  = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=NUM_WORKERS)
+    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, sampler=sampler, num_workers=NUM_WORKERS,
+                              worker_init_fn=worker_init_fn, generator=g)
+    val_loader   = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=NUM_WORKERS,
+                              worker_init_fn=worker_init_fn)
+    test_loader  = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=NUM_WORKERS,
+                              worker_init_fn=worker_init_fn)
 
     # =========================
     # 6. Model (baseline)
@@ -243,8 +263,31 @@ if __name__ == "__main__":
         criterion = nn.CrossEntropyLoss()
     # criterion = nn.CrossEntropyLoss(weight=class_weights_tensor)
     # criterion = FocalLoss(num_classes=num_classes, gamma=1.0, weight=class_weights_tensor)
-    optimizer = torch.optim.AdamW(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
-    scheduler = CosineAnnealingLR(optimizer, T_max=NUM_EPOCHS, eta_min=1e-6)
+    _TRAINABLE_FREEZE = ('attn_res_norm', 'mlp_res_norm', 'head')
+
+    def _make_full_optimizer():
+        pg = model.get_param_groups(
+            lr_base=LR,
+            lr_attn_res_norm=LR_ATTN_RES_NORM,
+            lr_mlp_res_norm=LR_MLP_RES_NORM,
+            lr_head=LR_HEAD,
+        )
+        return torch.optim.AdamW(pg, weight_decay=WEIGHT_DECAY)
+
+    if MODEL_NAME == 'vitb16_resattn' and FREEZE_BACKBONE_EPOCHS > 0:
+        for name, p in model.named_parameters():
+            p.requires_grad = any(k in name for k in _TRAINABLE_FREEZE)
+        optimizer = torch.optim.AdamW(
+            filter(lambda p: p.requires_grad, model.parameters()),
+            lr=LR, weight_decay=WEIGHT_DECAY,
+        )
+        scheduler = CosineAnnealingLR(optimizer, T_max=FREEZE_BACKBONE_EPOCHS, eta_min=1e-6)
+    elif MODEL_NAME == 'vitb16_resattn':
+        optimizer = _make_full_optimizer()
+        scheduler = CosineAnnealingLR(optimizer, T_max=NUM_EPOCHS, eta_min=1e-6)
+    else:
+        optimizer = torch.optim.AdamW(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
+        scheduler = CosineAnnealingLR(optimizer, T_max=NUM_EPOCHS, eta_min=1e-6)
     # =========================
     # 9. Training loop
     # =========================
@@ -259,6 +302,14 @@ if __name__ == "__main__":
     EPOCHS = NUM_EPOCHS
     start_time = time.time()
     for epoch in range(EPOCHS):
+        # unfreeze backbone sau freeze phase
+        if MODEL_NAME == 'vitb16_resattn' and FREEZE_BACKBONE_EPOCHS > 0 and epoch == FREEZE_BACKBONE_EPOCHS:
+            for p in model.parameters():
+                p.requires_grad = True
+            optimizer = _make_full_optimizer()
+            scheduler = CosineAnnealingLR(optimizer, T_max=NUM_EPOCHS - FREEZE_BACKBONE_EPOCHS, eta_min=1e-6)
+            logger.info(f"Epoch {epoch+1}: Unfreeze backbone — chuyển sang full param groups với lr riêng.")
+
         train_loss, train_acc, val_loss, val_acc = train_one_epoch(
             model, train_loader, val_loader,
             use_mixup=USE_MIXUP,   
