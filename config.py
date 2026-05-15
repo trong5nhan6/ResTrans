@@ -32,5 +32,7 @@ ALPHA_MIXUP = 0.4
 ALPHA_CUTMIX = 1.0
 MINORITY_CLASS = None
 
+BLOCK_SIZE = 4  # dùng cho vitb16_resattn
+
 MODEL_NAME = "conv_resattn" # vit_moe "swinv2", "vit", "resnet152", dinov2 "convnext" , resattn, block_resattn, vit_moe vitb16_resattn
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"

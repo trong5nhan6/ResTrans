@@ -4,9 +4,10 @@ from utils.utils import setup_logger, log_dataset_info, compute_model_complexity
 import os
 import random
 import numpy as np
+import time
 from torch.utils.data import DataLoader, WeightedRandomSampler
 from torch.optim.lr_scheduler import CosineAnnealingLR
-from config import DATA_ROOT, LOG_DIR, MODEL_DIR, BATCH_SIZE, NUM_WORKERS, LR, WEIGHT_DECAY, DEVICE, NUM_EPOCHS, MODEL_NAME, USE_CUTMIX, USE_MIXUP, ALPHA_MIXUP, ALPHA_CUTMIX, MINORITY_CLASS, FOCAL_LOSS, GAMMA, ALPHA, REDUCTION, LR_ATTN_RES_NORM, LR_MLP_RES_NORM, LR_HEAD, FREEZE_BACKBONE_EPOCHS, SEED
+from config import DATA_ROOT, LOG_DIR, MODEL_DIR, BATCH_SIZE, NUM_WORKERS, LR, WEIGHT_DECAY, DEVICE, NUM_EPOCHS, MODEL_NAME, USE_CUTMIX, USE_MIXUP, ALPHA_MIXUP, ALPHA_CUTMIX, MINORITY_CLASS, FOCAL_LOSS, GAMMA, ALPHA, REDUCTION, LR_ATTN_RES_NORM, LR_MLP_RES_NORM, LR_HEAD, FREEZE_BACKBONE_EPOCHS, SEED, BLOCK_SIZE
 from data.ISIC2018 import ISIC2018
 from model.basemodel import BaseModel
 from model.block_resattn import BlockAttnResClassifier
@@ -15,8 +16,6 @@ from model.vit_moe import ViT_BlockMoE
 from model.vitb16_resattn import ViTB16_AttnRes
 from model.conv_resattn import ConvNeXt_AttnRes
 from tqdm import tqdm
-import numpy as np
-import time
 
 # =========================
 # 8. Train / Eval
@@ -244,7 +243,7 @@ if __name__ == "__main__":
     elif MODEL_NAME == 'vit_moe':
         model = ViT_BlockMoE(num_classes=num_classes)
     elif MODEL_NAME == 'vitb16_resattn':
-        model = ViTB16_AttnRes(block_size=4, num_classes=num_classes)
+        model = ViTB16_AttnRes(block_size=BLOCK_SIZE, num_classes=num_classes)
     elif MODEL_NAME == 'conv_resattn':
         model = ConvNeXt_AttnRes(num_classes=num_classes)
     else:
@@ -277,10 +276,12 @@ if __name__ == "__main__":
     if MODEL_NAME == 'vitb16_resattn' and FREEZE_BACKBONE_EPOCHS > 0:
         for name, p in model.named_parameters():
             p.requires_grad = any(k in name for k in _TRAINABLE_FREEZE)
-        optimizer = torch.optim.AdamW(
-            filter(lambda p: p.requires_grad, model.parameters()),
-            lr=LR, weight_decay=WEIGHT_DECAY,
-        )
+        freeze_groups = [
+            {"params": [p for n, p in model.named_parameters() if p.requires_grad and 'attn_res_norm' in n], "lr": LR_ATTN_RES_NORM},
+            {"params": [p for n, p in model.named_parameters() if p.requires_grad and 'mlp_res_norm' in n],  "lr": LR_MLP_RES_NORM},
+            {"params": [p for n, p in model.named_parameters() if p.requires_grad and 'head' in n],          "lr": LR_HEAD},
+        ]
+        optimizer = torch.optim.AdamW(freeze_groups, weight_decay=WEIGHT_DECAY)
         scheduler = CosineAnnealingLR(optimizer, T_max=FREEZE_BACKBONE_EPOCHS, eta_min=1e-6)
     elif MODEL_NAME == 'vitb16_resattn':
         optimizer = _make_full_optimizer()
@@ -298,6 +299,9 @@ if __name__ == "__main__":
     log_dataset_info(logger, val_dataset, "Validation")
     log_dataset_info(logger, test_dataset, "Test")
     print("Total parameters:", count_params(model))
+
+    os.makedirs(MODEL_DIR, exist_ok=True)
+    best_val_acc = 0.0
 
     EPOCHS = NUM_EPOCHS
     start_time = time.time()
@@ -322,6 +326,12 @@ if __name__ == "__main__":
         logger.info(f"Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.4f} | Val Loss: {val_loss:.4f} | Val Acc: {val_acc:.4f}")
         scheduler.step()
 
+        if val_acc > best_val_acc:
+            best_val_acc = val_acc
+            ckpt_path = os.path.join(MODEL_DIR, f"{MODEL_NAME}_best.pth")
+            torch.save(model.state_dict(), ckpt_path)
+            logger.info(f"  → Saved best model (val_acc={best_val_acc:.4f}) to {ckpt_path}")
+
         # ===== Test every 20 epochs =====
         if (epoch + 1) % 10 == 0:
             test_metrics = evaluate(model, test_loader, num_classes)
@@ -338,4 +348,8 @@ if __name__ == "__main__":
     logger.info(f"Model: {MODEL_NAME}")
     logger.info(f"GFLOPs: {flops:.2f}")
     logger.info(f"Params (M): {params:.2f}")
+
     test_metrics = evaluate(model, test_loader, num_classes)
+    logger.info("===== FINAL TEST METRICS =====")
+    for k, v in test_metrics.items():
+        logger.info(f"{k}: {v:.4f}")

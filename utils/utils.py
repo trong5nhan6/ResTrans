@@ -158,10 +158,10 @@ def get_transform(is_train=True):
             T.RandomRotation(180),
             T.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.3, hue=0.1),  # nhẹ hơn
             T.RandomAffine(degrees=0, shear=10),
-            T.RandomErasing(p=0.2), 
             T.ToTensor(),
             T.Normalize([0.485, 0.456, 0.406],
-                        [0.229, 0.224, 0.225])
+                        [0.229, 0.224, 0.225]),
+            T.RandomErasing(p=0.2),
         ])
     else:
         return T.Compose([
@@ -243,32 +243,31 @@ def mixup_criterion(criterion, pred, y_a, y_b, lam):
     return lam * criterion(pred, y_a) + (1 - lam) * criterion(pred, y_b)
 
 def rand_bbox(size, lam):
-    W = size[2]
-    H = size[3]
+    H = size[2]
+    W = size[3]
     cut_rat = np.sqrt(1. - lam)
-    cut_w = int(W * cut_rat)
     cut_h = int(H * cut_rat)
+    cut_w = int(W * cut_rat)
 
-    cx = np.random.randint(W)
     cy = np.random.randint(H)
+    cx = np.random.randint(W)
 
-    bbx1 = np.clip(cx - cut_w // 2, 0, W)
     bby1 = np.clip(cy - cut_h // 2, 0, H)
-    bbx2 = np.clip(cx + cut_w // 2, 0, W)
     bby2 = np.clip(cy + cut_h // 2, 0, H)
+    bbx1 = np.clip(cx - cut_w // 2, 0, W)
+    bbx2 = np.clip(cx + cut_w // 2, 0, W)
 
-    return bbx1, bby1, bbx2, bby2
+    return bby1, bby2, bbx1, bbx2
 
 def cutmix_data(x, y, alpha=1.0):
     lam = np.random.beta(alpha, alpha)
     batch_size = x.size()[0]
     index = torch.randperm(batch_size).to(x.device)
 
-    bbx1, bby1, bbx2, bby2 = rand_bbox(x.size(), lam)
-    x[:, :, bbx1:bbx2, bby1:bby2] = x[index, :, bbx1:bbx2, bby1:bby2]
+    bby1, bby2, bbx1, bbx2 = rand_bbox(x.size(), lam)
+    x[:, :, bby1:bby2, bbx1:bbx2] = x[index, :, bby1:bby2, bbx1:bbx2]
 
-    # adjust lambda based on area
-    lam = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (x.size()[-1] * x.size()[-2]))
+    lam = 1 - ((bby2 - bby1) * (bbx2 - bbx1) / (x.size()[2] * x.size()[3]))
     y_a, y_b = y, y[index]
     return x, y_a, y_b, lam
 
@@ -317,9 +316,9 @@ def cutmix_data_class_aware(x, y, alpha=1.0, minority_classes=None):
             mask = torch.rand(batch_size).to(x.device) < 0.5
             index = torch.where(mask, index_min, index)
 
-    bbx1, bby1, bbx2, bby2 = rand_bbox(x.size(), lam)
+    bby1, bby2, bbx1, bbx2 = rand_bbox(x.size(), lam)
     x[:, :, bby1:bby2, bbx1:bbx2] = x[index, :, bby1:bby2, bbx1:bbx2]
 
-    lam = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (H * W))
+    lam = 1 - ((bby2 - bby1) * (bbx2 - bbx1) / (H * W))
     y_a, y_b = y, y[index]
     return x, y_a, y_b, lam

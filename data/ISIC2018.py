@@ -47,7 +47,7 @@ class ISIC2018(Dataset):
         img_path = os.path.join(self.img_dir, img_id + ".jpg")
 
         image = Image.open(img_path).convert("RGB")
-        label = self.get_label(row)
+        label = self.labels[idx]
 
         if self.transform:
             image = self.transform(image)
