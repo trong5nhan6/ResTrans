@@ -149,14 +149,15 @@ def log_dataset_info(logger, dataset, name="Train"):
         logger.info(f"  Class {u}: {c} samples ({c/len(labels):.2%})")
 
 
-def get_transform(is_train=True):
+def get_transform(is_train=True, img_size=224):
+    s = img_size
     if is_train:
         return T.Compose([
-            T.Resize((224,224)),
+            T.Resize((s, s)),
             T.RandomHorizontalFlip(),
             T.RandomVerticalFlip(),
             T.RandomRotation(180),
-            T.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.3, hue=0.1),  # nhẹ hơn
+            T.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.3, hue=0.1),
             T.RandomAffine(degrees=0, shear=10),
             T.ToTensor(),
             T.Normalize([0.485, 0.456, 0.406],
@@ -165,8 +166,8 @@ def get_transform(is_train=True):
         ])
     else:
         return T.Compose([
-            T.Resize((224, 224)),
-            T.CenterCrop(224),
+            T.Resize((s, s)),
+            T.CenterCrop(s),
             T.ToTensor(),
             T.Normalize([0.485, 0.456, 0.406],
                         [0.229, 0.224, 0.225])

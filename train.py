@@ -7,7 +7,7 @@ import numpy as np
 import time
 from torch.utils.data import DataLoader, WeightedRandomSampler
 from torch.optim.lr_scheduler import CosineAnnealingLR
-from config import DATA_ROOT, LOG_DIR, MODEL_DIR, BATCH_SIZE, NUM_WORKERS, LR, WEIGHT_DECAY, DEVICE, NUM_EPOCHS, MODEL_NAME, USE_CUTMIX, USE_MIXUP, ALPHA_MIXUP, ALPHA_CUTMIX, MINORITY_CLASS, FOCAL_LOSS, GAMMA, ALPHA, REDUCTION, LR_ATTN_RES_NORM, LR_MLP_RES_NORM, LR_HEAD, FREEZE_BACKBONE_EPOCHS, SEED, BLOCK_SIZE
+from config import DATA_ROOT, LOG_DIR, MODEL_DIR, BATCH_SIZE, NUM_WORKERS, LR, WEIGHT_DECAY, DEVICE, NUM_EPOCHS, MODEL_NAME, USE_CUTMIX, USE_MIXUP, ALPHA_MIXUP, ALPHA_CUTMIX, MINORITY_CLASS, FOCAL_LOSS, GAMMA, ALPHA, REDUCTION, LR_ATTN_RES_NORM, LR_MLP_RES_NORM, LR_HEAD, FREEZE_BACKBONE_EPOCHS, SEED, BLOCK_SIZE, IMG_SIZE, SWIN_VARIANT
 from data.ISIC2018 import ISIC2018
 from model.basemodel import BaseModel
 from model.block_resattn import BlockAttnResClassifier
@@ -15,6 +15,7 @@ from model.resattn import FullAttnResClassifier
 from model.vit_moe import ViT_BlockMoE
 from model.vitb16_resattn import ViTB16_AttnRes
 from model.conv_resattn import ConvNeXt_AttnRes
+from model.swinv2_resattn import SwinV2_AttnRes
 from tqdm import tqdm
 
 # =========================
@@ -203,9 +204,10 @@ if __name__ == "__main__":
     # =========================
     # 3. Load dataset
     # =========================
-    train_dataset = ISIC2018(os.path.join(DATA_ROOT, "train"), transform=get_transform(is_train=True))
-    val_dataset   = ISIC2018(os.path.join(DATA_ROOT, "val"), transform=get_transform(is_train=False))
-    test_dataset  = ISIC2018(os.path.join(DATA_ROOT, "test"), transform=get_transform(is_train=False))
+    _img_size = IMG_SIZE if MODEL_NAME == "swinv2_resattn" else 224
+    train_dataset = ISIC2018(os.path.join(DATA_ROOT, "train"), transform=get_transform(is_train=True,  img_size=_img_size))
+    val_dataset   = ISIC2018(os.path.join(DATA_ROOT, "val"),   transform=get_transform(is_train=False, img_size=_img_size))
+    test_dataset  = ISIC2018(os.path.join(DATA_ROOT, "test"),  transform=get_transform(is_train=False, img_size=_img_size))
     print('device:', DEVICE)
 
     # =========================
@@ -246,6 +248,8 @@ if __name__ == "__main__":
         model = ViTB16_AttnRes(block_size=BLOCK_SIZE, num_classes=num_classes)
     elif MODEL_NAME == 'conv_resattn':
         model = ConvNeXt_AttnRes(num_classes=num_classes)
+    elif MODEL_NAME == 'swinv2_resattn':
+        model = SwinV2_AttnRes(variant=SWIN_VARIANT, block_size=BLOCK_SIZE, num_classes=num_classes, pretrained=True)
     else:
         model = BaseModel(model_name=MODEL_NAME, num_classes=num_classes)
 
@@ -273,7 +277,8 @@ if __name__ == "__main__":
         )
         return torch.optim.AdamW(pg, weight_decay=WEIGHT_DECAY)
 
-    if MODEL_NAME == 'vitb16_resattn' and FREEZE_BACKBONE_EPOCHS > 0:
+    _ATTN_RES_MODELS = ('vitb16_resattn', 'swinv2_resattn')
+    if MODEL_NAME in _ATTN_RES_MODELS and FREEZE_BACKBONE_EPOCHS > 0:
         for name, p in model.named_parameters():
             p.requires_grad = any(k in name for k in _TRAINABLE_FREEZE)
         freeze_groups = [
@@ -283,7 +288,7 @@ if __name__ == "__main__":
         ]
         optimizer = torch.optim.AdamW(freeze_groups, weight_decay=WEIGHT_DECAY)
         scheduler = CosineAnnealingLR(optimizer, T_max=FREEZE_BACKBONE_EPOCHS, eta_min=1e-6)
-    elif MODEL_NAME == 'vitb16_resattn':
+    elif MODEL_NAME in _ATTN_RES_MODELS:
         optimizer = _make_full_optimizer()
         scheduler = CosineAnnealingLR(optimizer, T_max=NUM_EPOCHS, eta_min=1e-6)
     else:
@@ -307,7 +312,7 @@ if __name__ == "__main__":
     start_time = time.time()
     for epoch in range(EPOCHS):
         # unfreeze backbone sau freeze phase
-        if MODEL_NAME == 'vitb16_resattn' and FREEZE_BACKBONE_EPOCHS > 0 and epoch == FREEZE_BACKBONE_EPOCHS:
+        if MODEL_NAME in _ATTN_RES_MODELS and FREEZE_BACKBONE_EPOCHS > 0 and epoch == FREEZE_BACKBONE_EPOCHS:
             for p in model.parameters():
                 p.requires_grad = True
             optimizer = _make_full_optimizer()

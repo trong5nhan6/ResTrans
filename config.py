@@ -32,7 +32,12 @@ ALPHA_MIXUP = 0.4
 ALPHA_CUTMIX = 1.0
 MINORITY_CLASS = None
 
-BLOCK_SIZE = 4  # dùng cho vitb16_resattn
+BLOCK_SIZE = 4  # dùng cho vitb16_resattn / swinv2_resattn
 
-MODEL_NAME = "conv_resattn" # vit_moe "swinv2", "vit", "resnet152", dinov2 "convnext" , resattn, block_resattn, vit_moe vitb16_resattn
+# swinv2_resattn yêu cầu input 256×256 (window_size=8)
+# Các model khác dùng 224×224
+IMG_SIZE = 256  # 256 cho swinv2_resattn, 224 cho mọi model khác
+SWIN_VARIANT = "b"  # 't' = Tiny 28M, 's' = Small 50M, 'b' = Base 88M
+
+MODEL_NAME = "swinv2_resattn"  # vit_moe "swinv2", "vit", "resnet152", dinov2 "convnext", resattn, block_resattn, vit_moe, vitb16_resattn, conv_resattn, swinv2_resattn
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
