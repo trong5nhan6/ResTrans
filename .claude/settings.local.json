@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python model/swinv2_resattn.py)",
+      "WebFetch(domain:arxiv.org)"
+    ]
+  }
+}

@@ -16,6 +16,7 @@ from model.vit_moe import ViT_BlockMoE
 from model.vitb16_resattn import ViTB16_AttnRes
 from model.conv_resattn import ConvNeXt_AttnRes
 from model.swinv2_resattn import SwinV2_AttnRes
+from model.swinv2_xattnres import SwinV2_XAttnRes
 from tqdm import tqdm
 
 # =========================
@@ -250,6 +251,8 @@ if __name__ == "__main__":
         model = ConvNeXt_AttnRes(num_classes=num_classes)
     elif MODEL_NAME == 'swinv2_resattn':
         model = SwinV2_AttnRes(variant=SWIN_VARIANT, block_size=BLOCK_SIZE, num_classes=num_classes, pretrained=True)
+    elif MODEL_NAME == 'swinv2_xattnres':
+        model = SwinV2_XAttnRes(variant=SWIN_VARIANT, block_size=BLOCK_SIZE, num_classes=num_classes, pretrained=True)
     else:
         model = BaseModel(model_name=MODEL_NAME, num_classes=num_classes)
 
@@ -277,7 +280,7 @@ if __name__ == "__main__":
         )
         return torch.optim.AdamW(pg, weight_decay=WEIGHT_DECAY)
 
-    _ATTN_RES_MODELS = ('vitb16_resattn', 'swinv2_resattn')
+    _ATTN_RES_MODELS = ('vitb16_resattn', 'swinv2_resattn', 'swinv2_xattnres')
     if MODEL_NAME in _ATTN_RES_MODELS and FREEZE_BACKBONE_EPOCHS > 0:
         for name, p in model.named_parameters():
             p.requires_grad = any(k in name for k in _TRAINABLE_FREEZE)

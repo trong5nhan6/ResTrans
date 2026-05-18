@@ -115,7 +115,7 @@ def setup_logger(log_dir="logs", log_name="train.log"):
     file_handler = logging.FileHandler(log_path)
     file_handler.setLevel(logging.INFO)
 
-    # console handler
+    # console handler 
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.INFO)
 

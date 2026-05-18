@@ -1,0 +1,161 @@
+2026-05-15 07:50:24 | INFO | ===== TRAIN DATASET =====
+2026-05-15 07:50:24 | INFO | Total samples: 10015
+2026-05-15 07:50:24 | INFO | Class distribution:
+2026-05-15 07:50:24 | INFO |   Class 0: 1113 samples (11.11%)
+2026-05-15 07:50:24 | INFO |   Class 1: 6705 samples (66.95%)
+2026-05-15 07:50:24 | INFO |   Class 2: 514 samples (5.13%)
+2026-05-15 07:50:24 | INFO |   Class 3: 327 samples (3.27%)
+2026-05-15 07:50:24 | INFO |   Class 4: 1099 samples (10.97%)
+2026-05-15 07:50:24 | INFO |   Class 5: 115 samples (1.15%)
+2026-05-15 07:50:24 | INFO |   Class 6: 142 samples (1.42%)
+2026-05-15 07:50:24 | INFO | ===== VALIDATION DATASET =====
+2026-05-15 07:50:24 | INFO | Total samples: 193
+2026-05-15 07:50:24 | INFO | Class distribution:
+2026-05-15 07:50:24 | INFO |   Class 0: 21 samples (10.88%)
+2026-05-15 07:50:24 | INFO |   Class 1: 123 samples (63.73%)
+2026-05-15 07:50:24 | INFO |   Class 2: 15 samples (7.77%)
+2026-05-15 07:50:24 | INFO |   Class 3: 8 samples (4.15%)
+2026-05-15 07:50:24 | INFO |   Class 4: 22 samples (11.40%)
+2026-05-15 07:50:24 | INFO |   Class 5: 1 samples (0.52%)
+2026-05-15 07:50:24 | INFO |   Class 6: 3 samples (1.55%)
+2026-05-15 07:50:24 | INFO | ===== TEST DATASET =====
+2026-05-15 07:50:24 | INFO | Total samples: 1512
+2026-05-15 07:50:24 | INFO | Class distribution:
+2026-05-15 07:50:24 | INFO |   Class 0: 171 samples (11.31%)
+2026-05-15 07:50:24 | INFO |   Class 1: 909 samples (60.12%)
+2026-05-15 07:50:24 | INFO |   Class 2: 93 samples (6.15%)
+2026-05-15 07:50:24 | INFO |   Class 3: 43 samples (2.84%)
+2026-05-15 07:50:24 | INFO |   Class 4: 217 samples (14.35%)
+2026-05-15 07:50:24 | INFO |   Class 5: 44 samples (2.91%)
+2026-05-15 07:50:24 | INFO |   Class 6: 35 samples (2.31%)
+2026-05-15 07:52:14 | INFO | Epoch [1/50]
+2026-05-15 07:52:14 | INFO | Train Loss: 4.8807 | Train Acc: 0.2774 | Val Loss: 1.4944 | Val Acc: 0.4352
+2026-05-15 07:52:15 | INFO |   → Saved best model (val_acc=0.4352) to models/conv_resattn_best.pth
+2026-05-15 07:54:05 | INFO | Epoch [2/50]
+2026-05-15 07:54:05 | INFO | Train Loss: 1.5351 | Train Acc: 0.3594 | Val Loss: 0.9584 | Val Acc: 0.5699
+2026-05-15 07:54:05 | INFO |   → Saved best model (val_acc=0.5699) to models/conv_resattn_best.pth
+2026-05-15 07:55:55 | INFO | Epoch [3/50]
+2026-05-15 07:55:55 | INFO | Train Loss: 1.2798 | Train Acc: 0.4034 | Val Loss: 1.0789 | Val Acc: 0.5855
+2026-05-15 07:55:55 | INFO |   → Saved best model (val_acc=0.5855) to models/conv_resattn_best.pth
+2026-05-15 07:57:45 | INFO | Epoch [4/50]
+2026-05-15 07:57:45 | INFO | Train Loss: 1.1791 | Train Acc: 0.4356 | Val Loss: 1.0480 | Val Acc: 0.5751
+2026-05-15 07:59:35 | INFO | Epoch [5/50]
+2026-05-15 07:59:35 | INFO | Train Loss: 1.1775 | Train Acc: 0.4436 | Val Loss: 0.9257 | Val Acc: 0.5959
+2026-05-15 07:59:35 | INFO |   → Saved best model (val_acc=0.5959) to models/conv_resattn_best.pth
+2026-05-15 08:01:25 | INFO | Epoch [6/50]
+2026-05-15 08:01:25 | INFO | Train Loss: 1.1215 | Train Acc: 0.4572 | Val Loss: 0.8903 | Val Acc: 0.5855
+2026-05-15 08:03:15 | INFO | Epoch [7/50]
+2026-05-15 08:03:15 | INFO | Train Loss: 1.0738 | Train Acc: 0.4702 | Val Loss: 0.8124 | Val Acc: 0.6580
+2026-05-15 08:03:16 | INFO |   → Saved best model (val_acc=0.6580) to models/conv_resattn_best.pth
+2026-05-15 08:05:05 | INFO | Epoch [8/50]
+2026-05-15 08:05:05 | INFO | Train Loss: 0.9792 | Train Acc: 0.4957 | Val Loss: 0.6125 | Val Acc: 0.6839
+2026-05-15 08:05:06 | INFO |   → Saved best model (val_acc=0.6839) to models/conv_resattn_best.pth
+2026-05-15 08:06:56 | INFO | Epoch [9/50]
+2026-05-15 08:06:56 | INFO | Train Loss: 0.9361 | Train Acc: 0.5103 | Val Loss: 0.8646 | Val Acc: 0.6477
+2026-05-15 08:08:46 | INFO | Epoch [10/50]
+2026-05-15 08:08:46 | INFO | Train Loss: 0.9023 | Train Acc: 0.5179 | Val Loss: 0.5201 | Val Acc: 0.7979
+2026-05-15 08:08:46 | INFO |   → Saved best model (val_acc=0.7979) to models/conv_resattn_best.pth
+2026-05-15 08:08:50 | INFO | --- TEST METRICS @ Epoch 10 ---
+2026-05-15 08:08:50 | INFO | Acc@1: 0.7348
+2026-05-15 08:08:50 | INFO | Acc@5: 0.9954
+2026-05-15 08:08:50 | INFO | Precision: 0.6548
+2026-05-15 08:08:50 | INFO | Recall: 0.6409
+2026-05-15 08:08:50 | INFO | F1: 0.6043
+2026-05-15 08:08:50 | INFO | Macro F1: 0.6043
+2026-05-15 08:08:50 | INFO | ROC-AUC: 0.9416
+2026-05-15 08:10:40 | INFO | Epoch [11/50]
+2026-05-15 08:10:40 | INFO | Train Loss: 0.8488 | Train Acc: 0.5403 | Val Loss: 1.6629 | Val Acc: 0.4249
+2026-05-15 08:12:30 | INFO | Epoch [12/50]
+2026-05-15 08:12:30 | INFO | Train Loss: 0.8070 | Train Acc: 0.5647 | Val Loss: 0.4145 | Val Acc: 0.7668
+2026-05-15 08:14:20 | INFO | Epoch [13/50]
+2026-05-15 08:14:20 | INFO | Train Loss: 0.7670 | Train Acc: 0.5859 | Val Loss: 0.4788 | Val Acc: 0.7979
+2026-05-15 08:16:10 | INFO | Epoch [14/50]
+2026-05-15 08:16:10 | INFO | Train Loss: 0.7553 | Train Acc: 0.5907 | Val Loss: 0.3641 | Val Acc: 0.8031
+2026-05-15 08:16:10 | INFO |   → Saved best model (val_acc=0.8031) to models/conv_resattn_best.pth
+2026-05-15 08:18:00 | INFO | Epoch [15/50]
+2026-05-15 08:18:00 | INFO | Train Loss: 0.7497 | Train Acc: 0.5947 | Val Loss: 0.4408 | Val Acc: 0.7409
+2026-05-15 08:19:50 | INFO | Epoch [16/50]
+2026-05-15 08:19:50 | INFO | Train Loss: 0.7276 | Train Acc: 0.6082 | Val Loss: 0.3513 | Val Acc: 0.7979
+2026-05-15 08:21:40 | INFO | Epoch [17/50]
+2026-05-15 08:21:40 | INFO | Train Loss: 0.6910 | Train Acc: 0.6248 | Val Loss: 0.3558 | Val Acc: 0.8290
+2026-05-15 08:21:40 | INFO |   → Saved best model (val_acc=0.8290) to models/conv_resattn_best.pth
+2026-05-15 08:23:30 | INFO | Epoch [18/50]
+2026-05-15 08:23:30 | INFO | Train Loss: 0.7214 | Train Acc: 0.6110 | Val Loss: 0.3143 | Val Acc: 0.8446
+2026-05-15 08:23:30 | INFO |   → Saved best model (val_acc=0.8446) to models/conv_resattn_best.pth
+2026-05-15 08:25:20 | INFO | Epoch [19/50]
+2026-05-15 08:25:20 | INFO | Train Loss: 0.6754 | Train Acc: 0.6360 | Val Loss: 0.4869 | Val Acc: 0.7254
+2026-05-15 08:27:10 | INFO | Epoch [20/50]
+2026-05-15 08:27:10 | INFO | Train Loss: 0.6892 | Train Acc: 0.6244 | Val Loss: 0.4409 | Val Acc: 0.7979
+2026-05-15 08:27:14 | INFO | --- TEST METRICS @ Epoch 20 ---
+2026-05-15 08:27:14 | INFO | Acc@1: 0.7560
+2026-05-15 08:27:14 | INFO | Acc@5: 0.9940
+2026-05-15 08:27:14 | INFO | Precision: 0.6610
+2026-05-15 08:27:14 | INFO | Recall: 0.7030
+2026-05-15 08:27:14 | INFO | F1: 0.6280
+2026-05-15 08:27:14 | INFO | Macro F1: 0.6280
+2026-05-15 08:27:14 | INFO | ROC-AUC: 0.9561
+2026-05-15 08:29:04 | INFO | Epoch [21/50]
+2026-05-15 08:29:04 | INFO | Train Loss: 0.6682 | Train Acc: 0.6344 | Val Loss: 0.2781 | Val Acc: 0.8187
+2026-05-15 08:30:54 | INFO | Epoch [22/50]
+2026-05-15 08:30:54 | INFO | Train Loss: 0.6398 | Train Acc: 0.6450 | Val Loss: 0.2302 | Val Acc: 0.8756
+2026-05-15 08:30:55 | INFO |   → Saved best model (val_acc=0.8756) to models/conv_resattn_best.pth
+2026-05-15 08:32:44 | INFO | Epoch [23/50]
+2026-05-15 08:32:44 | INFO | Train Loss: 0.6119 | Train Acc: 0.6628 | Val Loss: 0.3745 | Val Acc: 0.8290
+2026-05-15 08:34:34 | INFO | Epoch [24/50]
+2026-05-15 08:34:34 | INFO | Train Loss: 0.6411 | Train Acc: 0.6477 | Val Loss: 0.3386 | Val Acc: 0.8808
+2026-05-15 08:34:35 | INFO |   → Saved best model (val_acc=0.8808) to models/conv_resattn_best.pth
+2026-05-15 08:36:25 | INFO | Epoch [25/50]
+2026-05-15 08:36:25 | INFO | Train Loss: 0.6302 | Train Acc: 0.6542 | Val Loss: 0.3475 | Val Acc: 0.8135
+2026-05-15 08:38:15 | INFO | Epoch [26/50]
+2026-05-15 08:38:15 | INFO | Train Loss: 0.6005 | Train Acc: 0.6759 | Val Loss: 0.3542 | Val Acc: 0.8446
+2026-05-15 08:40:04 | INFO | Epoch [27/50]
+2026-05-15 08:40:04 | INFO | Train Loss: 0.5750 | Train Acc: 0.6861 | Val Loss: 0.5790 | Val Acc: 0.8290
+2026-05-15 08:41:54 | INFO | Epoch [28/50]
+2026-05-15 08:41:54 | INFO | Train Loss: 0.5544 | Train Acc: 0.6976 | Val Loss: 0.4033 | Val Acc: 0.8238
+2026-05-15 08:43:44 | INFO | Epoch [29/50]
+2026-05-15 08:43:44 | INFO | Train Loss: 0.5534 | Train Acc: 0.6982 | Val Loss: 0.3679 | Val Acc: 0.8290
+2026-05-15 08:45:34 | INFO | Epoch [30/50]
+2026-05-15 08:45:34 | INFO | Train Loss: 0.5888 | Train Acc: 0.6783 | Val Loss: 0.2863 | Val Acc: 0.8394
+2026-05-15 08:45:39 | INFO | --- TEST METRICS @ Epoch 30 ---
+2026-05-15 08:45:39 | INFO | Acc@1: 0.8062
+2026-05-15 08:45:39 | INFO | Acc@5: 0.9967
+2026-05-15 08:45:39 | INFO | Precision: 0.7507
+2026-05-15 08:45:39 | INFO | Recall: 0.7782
+2026-05-15 08:45:39 | INFO | F1: 0.7605
+2026-05-15 08:45:39 | INFO | Macro F1: 0.7605
+2026-05-15 08:45:39 | INFO | ROC-AUC: 0.9634
+2026-05-15 08:47:28 | INFO | Epoch [31/50]
+2026-05-15 08:47:28 | INFO | Train Loss: 0.5296 | Train Acc: 0.7107 | Val Loss: 0.2328 | Val Acc: 0.8653
+2026-05-15 08:49:18 | INFO | Epoch [32/50]
+2026-05-15 08:49:18 | INFO | Train Loss: 0.5696 | Train Acc: 0.6836 | Val Loss: 0.3699 | Val Acc: 0.8394
+2026-05-15 08:51:08 | INFO | Epoch [33/50]
+2026-05-15 08:51:08 | INFO | Train Loss: 0.5380 | Train Acc: 0.7030 | Val Loss: 0.2361 | Val Acc: 0.8912
+2026-05-15 08:51:09 | INFO |   → Saved best model (val_acc=0.8912) to models/conv_resattn_best.pth
+2026-05-15 08:52:58 | INFO | Epoch [34/50]
+2026-05-15 08:52:58 | INFO | Train Loss: 0.5427 | Train Acc: 0.7035 | Val Loss: 0.3908 | Val Acc: 0.8394
+2026-05-15 08:54:48 | INFO | Epoch [35/50]
+2026-05-15 08:54:48 | INFO | Train Loss: 0.5159 | Train Acc: 0.7209 | Val Loss: 0.3162 | Val Acc: 0.8964
+2026-05-15 08:54:49 | INFO |   → Saved best model (val_acc=0.8964) to models/conv_resattn_best.pth
+2026-05-15 08:56:39 | INFO | Epoch [36/50]
+2026-05-15 08:56:39 | INFO | Train Loss: 0.5245 | Train Acc: 0.7109 | Val Loss: 0.2560 | Val Acc: 0.8601
+2026-05-15 08:58:29 | INFO | Epoch [37/50]
+2026-05-15 08:58:29 | INFO | Train Loss: 0.5195 | Train Acc: 0.7115 | Val Loss: 0.2650 | Val Acc: 0.9067
+2026-05-15 08:58:29 | INFO |   → Saved best model (val_acc=0.9067) to models/conv_resattn_best.pth
+2026-05-15 09:00:19 | INFO | Epoch [38/50]
+2026-05-15 09:00:19 | INFO | Train Loss: 0.5089 | Train Acc: 0.7181 | Val Loss: 0.2460 | Val Acc: 0.9067
+2026-05-15 09:02:09 | INFO | Epoch [39/50]
+2026-05-15 09:02:09 | INFO | Train Loss: 0.5274 | Train Acc: 0.7098 | Val Loss: 0.2741 | Val Acc: 0.8756
+2026-05-15 09:03:59 | INFO | Epoch [40/50]
+2026-05-15 09:03:59 | INFO | Train Loss: 0.5244 | Train Acc: 0.7100 | Val Loss: 0.3913 | Val Acc: 0.8705
+2026-05-15 09:04:03 | INFO | --- TEST METRICS @ Epoch 40 ---
+2026-05-15 09:04:03 | INFO | Acc@1: 0.8168
+2026-05-15 09:04:03 | INFO | Acc@5: 0.9974
+2026-05-15 09:04:03 | INFO | Precision: 0.7514
+2026-05-15 09:04:03 | INFO | Recall: 0.7703
+2026-05-15 09:04:03 | INFO | F1: 0.7528
+2026-05-15 09:04:03 | INFO | Macro F1: 0.7528
+2026-05-15 09:04:03 | INFO | ROC-AUC: 0.9664
+2026-05-15 09:05:53 | INFO | Epoch [41/50]
+2026-05-15 09:05:53 | INFO | Train Loss: 0.5248 | Train Acc: 0.7055 | Val Loss: 0.3327 | Val Acc: 0.8394
+2026-05-15 09:07:43 | INFO | Epoch [42/50]
+2026-05-15 09:07:43 | INFO | Train Loss: 0.5058 | Train Acc: 0.7164 | Val Loss: 0.2877 | Val Acc: 0.8549
